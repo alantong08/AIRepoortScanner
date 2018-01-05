@@ -165,8 +165,8 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
     private List<BillOrderDetail> getAllBillOrderDetailList() {
         List<BillOrderDetail> billOrderDetails = new ArrayList<>();
         try {
-            Pageable pagRequest = new PageRequest(1, 10, new Sort(Sort.Direction.DESC,"createdDate"));
-            List<OrderDetail> orderDetails = orderDetailDao.findAll(pagRequest);
+           // Pageable pagRequest = new PageRequest(1, 10, new Sort(Sort.Direction.DESC,"createdDate"));
+            List<OrderDetail> orderDetails = orderDetailDao.findAll();
             billOrderDetails = populateBillOrderDetails(orderDetails);
         } catch (Exception se) {
             se.printStackTrace();
@@ -248,8 +248,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
         String rate = "";
         String transferType = billOrderDetail.getTransferType();
         String group = userInfo.getGroupName();
-        if (ActivityType.NO_ASSISTS.getValue().equals(activityType)) {// no
-                                                                      // assists
+        if (ActivityType.NO_ASSISTS.getValue().equals(activityType)) {// no assists
             rate = setRateForNewer(transferType, rate);
         } else if (ActivityType.GENERAL_ASSISTS.getValue().equals(activityType)) {// assists
             if (GroupType.ACCOUNTING_GROUP.getName().equals(group)) {
@@ -281,6 +280,10 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             } else {
                 rate = setRateForNewer(transferType, rate);
             }
+        }else if (ActivityType.LUCKY_GUY.getValue().equals(activityType)) {
+            rate = "0.1";
+        }else if (ActivityType.NEW_WELFARE.getValue().equals(activityType)) {
+            rate = "0.2";
         }
         billOrderDetail.setRate(rate);
     }

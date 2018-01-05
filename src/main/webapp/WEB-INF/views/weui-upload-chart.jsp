@@ -29,6 +29,9 @@
 	          <select class="weui-select" id="activityType" name="activityType">
 					<option value="1">月底助攻</option>
 					<option value="2">月底不助攻</option>
+					<option value="3">幸运星</option>
+					<option value="4">新人福利</option>
+					<option value="5">邀请福利</option>
 	          </select>
 	        </div>
 	      </div>

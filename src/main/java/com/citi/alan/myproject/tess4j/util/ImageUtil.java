@@ -14,9 +14,7 @@ import net.sourceforge.tess4j.TesseractException;
 
 @Component
 public class ImageUtil {
-    
-    @Value("${original.screenshot.path}")
-    private String resultPath;
+
     
     @Value("${upload.file.path}")
     private String uploadFilePath;

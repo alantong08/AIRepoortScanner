@@ -1,4 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://"
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,7 +22,6 @@
 	<link rel="stylesheet" type="text/css" href="/easyuiex/css/easyuiex.css">
 	<script type="text/javascript" src="/easyuiex/easy.easyuiex.js"></script>
 	<script type="text/javascript" src="/easyuiex/easy.easyuiex-validate.js"></script>
-	<!-- 使用 EasyUIEx的 easy.jquery.edatagrid.js 代替 jquery.edatagrid.js -->
 	<script type="text/javascript" src="/easyuiex/easy.jquery.edatagrid.js"></script>
 </head>
 <body>
@@ -41,6 +46,7 @@
                 <th field="alipayAccount" width="70" editor="{type:'validatebox',options:{required:true}}">支付宝</th>
                 <th field="comments" width="50" editor="{type:'validatebox',options:{required:false}}">备注</th>
  				<th field="createdDate" width="50" editor="{type:'validatebox',options:{required:false}}">报单时间</th>
+ 				<th field="orderScreenshot" align="center" data-options="width:50, formatter: imgFormatter" >订单截图</th>
             </tr>
         </thead>
     </table>
@@ -77,21 +83,13 @@
 
   	    });
   		
+
+  		
   		$("#orderEDataGridAutoSave").initEdatagrid({
   			url : "/admin/getOrderList",
   			updateUrl : "/admin/saveOrder",
-  			autoSave : true, //auto save the editing row when click out of datagrid!
+  			autoSave : false, //auto save the editing row when click out of datagrid!
   			iconCls:'icon-group',
-  			destroyMsg : {
-  				norecord : { // when no record is selected
-  					title : 'Warning',
-  					msg : '请选择要删除的行.'
-  				},
-  				confirm : { // when select a row
-  					title : 'Confirm',
-  					msg : '确定要删除该行数据吗?'
-  				}
-  			},
   			onLoadSuccess:function(){
   			//	$(this).datagrid("enableDnd");
   			},
@@ -99,10 +97,9 @@
   			checkbox : true,
   			checkOnSelect : true,
   			singleSelect : true,
-  			autoSave : true,
   			//queryParam:{"rows":dg.datagrid("options").pageSize},
-  			clickEdit : true, //单击编辑
-  			showMsg : true, // 显示操作消息
+  			clickEdit : false, //单击编辑
+  			showMsg : false, // 显示操作消息
   			/*
   			 * 分页控制
   			 */
@@ -118,8 +115,14 @@
 				scanDate : $("#scanDate").combobox("getValue")
 			});
 		}
-    	        
-        
+	 
+	 function imgFormatter(value,row,index){
+	    value ='<%=basePath%>' + "images/avatar4.png";
+		var element = '<a href='+value+'  target="_blank"><img style="width:30px; height:30px" src=' + value + '/></a>';
+		return element;
+	}
+	 
+
 </script>
     
 </body>
