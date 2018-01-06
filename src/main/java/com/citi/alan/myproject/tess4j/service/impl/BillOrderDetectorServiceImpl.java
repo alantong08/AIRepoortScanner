@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +15,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.citi.alan.myproject.tess4j.dao.OrderDetailDao;
@@ -198,6 +194,8 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             UserInfo userInfo = userInfoDao.findByMobile(billOrderDetail.getMobile());
             orderDetail.setUserInfo(userInfo);
             orderDetail.setCreatedDate(DateUtil.getFormatDateStr("yyyy/MM/dd HH:mm:ss"));
+            Merchant merchant = map.get(billOrderDetail.getMerchantName());
+            orderDetail.setMerchantName(merchant.getMerchantName());
             orderDetailDao.save(orderDetail);
             flag = true;
         } catch (Exception e) {
@@ -309,8 +307,10 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             String value = singleLineResult.substring(singleLineResult.indexOf(key) + key.length());
             if (key.contains("单金")) {
                 key = "订单金额";
-            } else if (key.contains("随机立减")) {
+            } else if (key.contains("随机立")) {
                 key = "随机立减";
+            }else if (key.contains("奖励金")) {
+                key = "奖励金";
             }
             resultMap.put(key.trim(), value.trim());
         }
@@ -319,14 +319,14 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
         }
 
         try {
-            String date = resultMap.get("创建时间");
+            String date = resultMap.get("创建时间").replaceAll("o", "0").replaceAll("O", "0");
             setScanDate(billOrderDetail, date);
         } catch (Exception se) {
             se.printStackTrace();
         }
 
         try {
-            String merchantsOrderNum = resultMap.get("").replaceAll("o", "0");
+            String merchantsOrderNum = resultMap.get("").replaceAll("o", "0").replaceAll("O", "0");
             billOrderDetail.setOrderNum(merchantsOrderNum);
             String merchantsNo = merchantsOrderNum.substring(0, 12);
 
@@ -337,15 +337,32 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
         }
 
         try {
-            String orderAmount = resultMap.get("订单金额").replaceAll("o", "0");
+            String orderAmount = resultMap.get("订单金额").replaceAll("o", "0").replaceAll("O", "0");
             Float actualAmount = Float.valueOf(orderAmount);
-            String discountedPrice = resultMap.get("随机立减").substring(1).replaceAll("o", "0").replaceAll("O", "0");
-
-            if (!StringUtils.isEmpty(discountedPrice)) {
-                Float disPrice = Float.valueOf(discountedPrice);
-                actualAmount = actualAmount - disPrice;
-                billOrderDetail.setDiscountedPrice(decimalFormat.format(disPrice));
+            
+            String redBag = resultMap.get("红包");
+            float redBagPrice = 0f;
+            if(!StringUtils.isEmpty(redBag)) {
+            		redBag = redBag.replaceAll("_", "").replaceAll("-", "").replaceAll("一", "").replaceAll("o", "0").replaceAll("O", "0");
+            		redBagPrice = Float.valueOf(redBag);
             }
+            
+            String randomDiscountedPriceStr = resultMap.get("随机立减");
+            float randomDiscountedPrice = 0f;
+            if(!StringUtils.isEmpty(randomDiscountedPriceStr)) {
+            		randomDiscountedPriceStr = randomDiscountedPriceStr.replaceAll("_", "").replaceAll("-", "").replaceAll("一", "").replaceAll("o", "0").replaceAll("O", "0");
+            		randomDiscountedPrice = Float.valueOf(randomDiscountedPriceStr);
+            		billOrderDetail.setDiscountedPrice(decimalFormat.format(randomDiscountedPrice));
+            }
+            		
+            String bonusStr = resultMap.get("奖励金");
+            float bonus = 0f;
+            if(!StringUtils.isEmpty(bonusStr)) {
+        			bonusStr = bonusStr.replaceAll("_", "").replaceAll("-", "").replaceAll("一", "").replaceAll("o", "0").replaceAll("O", "0");
+        			bonus = Float.valueOf(bonusStr);
+            }
+            actualAmount = actualAmount - redBagPrice - randomDiscountedPrice - bonus;
+            billOrderDetail.setDiscountedPrice(decimalFormat.format(randomDiscountedPrice));
             billOrderDetail.setActualPrice(decimalFormat.format(actualAmount));
         } catch (Exception se) {
             se.printStackTrace();
@@ -357,13 +374,22 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
         return billOrderDetail;
     }
 
-    private void setScanDate(BillOrderDetail billOrderDetail, String date) {
-        String year = date.substring(0, 4);
-        String month = date.substring(5, 7);
-        String day = date.substring(8, 10);
-        // billOrderDetail.setDate(month + "/" + day + "/" + year);
-        billOrderDetail.setScanDate(year + "-" + month + "-" + day);
-    }
+	private void setScanDate(BillOrderDetail billOrderDetail, String date) {
+		if (date.contains("-")) {
+			String year = date.substring(0, 4);
+			String month = date.substring(5, 7);
+			String day = date.substring(8, 10);
+			// billOrderDetail.setDate(month + "/" + day + "/" + year);
+			billOrderDetail.setScanDate(year + "-" + month + "-" + day);
+		} else {
+			String year = date.substring(0, 4);
+			String month = date.substring(4, 6);
+			String day = date.substring(6, 8);
+			// billOrderDetail.setDate(month + "/" + day + "/" + year);
+			billOrderDetail.setScanDate(year + "-" + month + "-" + day);
+		}
+
+	}
 
     /**
      * processs Elian Pay order
@@ -403,7 +429,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
         }
 
         try {
-            String date = resultMap.get("支付时间");
+            String date = resultMap.get("支付时间").replaceAll("o", "0").replaceAll("O", "0");
             setScanDate(billOrderDetail, date);
         } catch (Exception se) {
             se.printStackTrace();
@@ -443,7 +469,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             String key = singleLineResult.substring(0, singleLineResult.indexOf(" ") + 1);
             String value = singleLineResult.substring(singleLineResult.indexOf(key) + key.length());
             if (key.contains("付款金额")) {
-                key = "订单金额";
+                key = "付款金额";
             } else if (value.contains("单号")) {
                 key = "商户订单号";
                 value = value.substring(value.indexOf("单号") + 3).trim();
@@ -452,7 +478,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
         }
 
         try {
-            String date = resultMap.get("支付时间");
+            String date = resultMap.get("支付时间").replaceAll("o", "0").replaceAll("O", "0");
             setScanDate(billOrderDetail, date);
         } catch (Exception se) {
             se.printStackTrace();
@@ -468,7 +494,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
         }
 
         try {
-            String orderAmount = resultMap.get("订单金额").substring(1).replaceAll("o", "0").replaceAll(" ", "");
+            String orderAmount = resultMap.get("付款金额").substring(1).replaceAll("o", "0").replaceAll(" ", "");
             float orderPrice = Float.valueOf(orderAmount);
             billOrderDetail.setActualPrice(decimalFormat.format(orderPrice));
         } catch (Exception e) {

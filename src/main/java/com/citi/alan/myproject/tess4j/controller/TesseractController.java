@@ -67,6 +67,7 @@ public class TesseractController {
 				//Thumbnails.of(convFile).size(800, 1000).toFile(newFile);
 				multipart.transferTo(newFile);
 				detail = billOrderDetectorService.detetctBillOrderDetail(newFile, activityType, user);
+				detail.setImageName(newFileName);
 				viewName="weui-confirm";
 			}
 		} catch (Exception se) {

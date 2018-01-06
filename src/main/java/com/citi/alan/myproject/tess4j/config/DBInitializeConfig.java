@@ -22,8 +22,8 @@ public class DBInitializeConfig {
 		try {
 			Connection connection = dataSource.getConnection();
 			Statement statement = connection.createStatement();
-			createRoleData(statement);
-			createMerchantData(statement);
+			//createRoleData(statement);
+			//createMerchantData(statement);
 			statement.close();
 			connection.close();
 		}

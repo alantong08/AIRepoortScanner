@@ -18,16 +18,23 @@ public class BillOrderDetail implements Serializable{
     private String discountedPrice;
     private String totalPrice;
     private String transferType;
-    private String comments;
+    private String comment;
     private String alipayAccount;
     private String mobile;
     private String createdDate;
     private Integer id;
     private String groupName;
+    private String imageName;
     
     
 
-    public String getGroupName() {
+    public String getImageName() {
+		return imageName;
+	}
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+	public String getGroupName() {
         return groupName;
     }
     public void setGroupName(String groupName) {
@@ -78,15 +85,15 @@ public class BillOrderDetail implements Serializable{
 	public void setTransferType(String transferType) {
 		this.transferType = transferType;
 	}
-	public String getComments() {
-        return comments;
-    }
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
 
 
-    public String getActualPrice() {
+    public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	public String getActualPrice() {
 		return actualPrice;
 	}
 	public void setActualPrice(String actualPrice) {

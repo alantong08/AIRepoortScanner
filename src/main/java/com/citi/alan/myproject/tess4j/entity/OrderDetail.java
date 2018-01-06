@@ -30,6 +30,7 @@ public class OrderDetail {
     @JoinColumn(name = "user_id")
     private UserInfo userInfo;
     private String createdDate;
+    private String imageName;
 
     public Integer getId() {
         return id;
@@ -108,7 +109,14 @@ public class OrderDetail {
     public void setUserInfo(UserInfo userInfo) {
         this.userInfo = userInfo;
     }
-    @Override
+    
+    public String getImageName() {
+		return imageName;
+	}
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+	@Override
     public String toString(){
         return ToStringBuilder.reflectionToString(this);
       

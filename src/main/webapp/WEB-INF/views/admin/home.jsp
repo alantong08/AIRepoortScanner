@@ -1,9 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()+ path + "/";
 %>
 <!DOCTYPE html>
 <html>
@@ -44,9 +42,9 @@
                 <th field="activityType" width="50" editor="{type:'validatebox',options:{required:true}}">参与助攻</th>
                 <th field="rate" width="30" editor="{type:'validatebox',options:{required:true}}">费率</th>
                 <th field="alipayAccount" width="70" editor="{type:'validatebox',options:{required:true}}">支付宝</th>
-                <th field="comments" width="50" editor="{type:'validatebox',options:{required:false}}">备注</th>
+                <th field="comment" width="50" editor="{type:'validatebox',options:{required:false}}">备注</th>
  				<th field="createdDate" width="50" editor="{type:'validatebox',options:{required:false}}">报单时间</th>
- 				<th field="orderScreenshot" align="center" data-options="width:50, formatter: imgFormatter" >订单截图</th>
+ 				<th field="imageName" align="center" data-options="width:50, formatter: imgFormatter" >订单截图</th>
             </tr>
         </thead>
     </table>
@@ -88,7 +86,7 @@
   		$("#orderEDataGridAutoSave").initEdatagrid({
   			url : "/admin/getOrderList",
   			updateUrl : "/admin/saveOrder",
-  			autoSave : false, //auto save the editing row when click out of datagrid!
+  			autoSave : true, //auto save the editing row when click out of datagrid!
   			iconCls:'icon-group',
   			onLoadSuccess:function(){
   			//	$(this).datagrid("enableDnd");
@@ -117,7 +115,8 @@
 		}
 	 
 	 function imgFormatter(value,row,index){
-	    value ='<%=basePath%>' + "images/avatar4.png";
+	  
+	    value ='<%=basePath%>' + value;
 		var element = '<a href='+value+'  target="_blank"><img style="width:30px; height:30px" src=' + value + '/></a>';
 		return element;
 	}

@@ -54,7 +54,7 @@
 					<label class="weui-label">群昵称</label>
 				</div>
 				<div class="weui-cell__bd">
-					<input class="weui-input" id="nickName" name="nickName" type="text" placeholder="请输入群昵称">
+					<input class="weui-input" id="nickName" name="nickName" type="text" placeholder="请输入群昵称" value="XX(X级)XX•XX">
 				</div>
 			</div>
 

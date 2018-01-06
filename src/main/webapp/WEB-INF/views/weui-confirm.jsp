@@ -22,7 +22,10 @@
 		<div class="weui-cells weui-cells_form">
 	      <div class="weui-cell">
 	        <div class="weui-cell__hd"><label class="weui-label">扫码日期：</label></div>
-	        <div class="weui-cell__bd"><input class="weui-input" type="date" id="scanDate" name="scanDate" /></div>
+	        <div class="weui-cell__bd">
+	        <input class="weui-input" type="date" id="scanDate" name="scanDate" />
+	        <input type="text" id="imageName" name="imageName" hidden="true"/>
+	        </div>
 	      </div>
 	      <div class="weui-cell">
 	        <div class="weui-cell__hd"><label class="weui-label">姓名:</label></div>
@@ -96,7 +99,7 @@
 		  </div>
 	      <div class="weui-cell">
 	        <div class="weui-cell__hd"><label class="weui-label">备注:</label></div>
- 			<div class="weui-cell__bd"><input class="weui-input" type="text" id="comments" name="comments"/></div>
+ 			<div class="weui-cell__bd"><input class="weui-input" type="text" id="comment" name="comment"/></div>
 		  </div>		  		  		  		  
 		<div class="weui-btn-area">
 			<a class="weui-btn weui-btn_primary" id="showTooltips" onclick="$('#ff').submit()">提交</a>
@@ -132,7 +135,8 @@
 		$("#activityType").val(orderDetail.activityType);
 		$("#rate").val(orderDetail.rate);
 		$("#alipayAccount").val(orderDetail.alipayAccount);
-		$("#comments").val(orderDetail.comments);
+		$("#comment").val(orderDetail.comment);
+		$("#imageName").val(orderDetail.imageName);
 		
 		$.post("/user/tess4j/merchant", function(data){
 			for(var i=0;i<data.length;i++){
