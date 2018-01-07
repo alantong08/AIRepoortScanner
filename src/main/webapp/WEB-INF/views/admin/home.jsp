@@ -6,21 +6,22 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<base href="<%=basePath%>">
     <meta charset="UTF-8">
     <title>报单管理</title>
-
-	<link rel="stylesheet" type="text/css" href="/easyui/themes/default/easyui.css">
-    <link rel="stylesheet" type="text/css" href="/easyui/themes/icon.css">
-    <link rel="stylesheet" type="text/css" href="/easyui/themes/demo.css">
-    <script type="text/javascript" src="/easyui/jquery.min.js"></script>
-    <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="/easyui/jquery.edatagrid.js"></script>
+	<base href="value">
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="easyui/themes/demo.css">
+    <script type="text/javascript" src="easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="easyui/jquery.edatagrid.js"></script>
     
     <!-- EasyUIEx -->
-	<link rel="stylesheet" type="text/css" href="/easyuiex/css/easyuiex.css">
-	<script type="text/javascript" src="/easyuiex/easy.easyuiex.js"></script>
-	<script type="text/javascript" src="/easyuiex/easy.easyuiex-validate.js"></script>
-	<script type="text/javascript" src="/easyuiex/easy.jquery.edatagrid.js"></script>
+	<link rel="stylesheet" type="text/css" href="easyuiex/css/easyuiex.css">
+	<script type="text/javascript" src="easyuiex/easy.easyuiex.js"></script>
+	<script type="text/javascript" src="easyuiex/easy.easyuiex-validate.js"></script>
+	<script type="text/javascript" src="easyuiex/easy.jquery.edatagrid.js"></script>
 </head>
 <body>
     <h2>报单查询</h2>
@@ -84,8 +85,8 @@
 
   		
   		$("#orderEDataGridAutoSave").initEdatagrid({
-  			url : "/admin/getOrderList",
-  			updateUrl : "/admin/saveOrder",
+  			url : "admin/getOrderList",
+  			updateUrl : "admin/saveOrder",
   			autoSave : true, //auto save the editing row when click out of datagrid!
   			iconCls:'icon-group',
   			onLoadSuccess:function(){
@@ -114,9 +115,7 @@
 			});
 		}
 	 
-	 function imgFormatter(value,row,index){
-	  
-	    value ='<%=basePath%>' + value;
+	 function imgFormatter(value,row,index){	 
 		var element = '<a href='+value+'  target="_blank"><img style="width:30px; height:30px" src=' + value + '/></a>';
 		return element;
 	}

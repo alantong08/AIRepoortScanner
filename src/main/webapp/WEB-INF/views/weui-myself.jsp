@@ -1,21 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()+ path + "/";
+%>	
 <!DOCTYPE html>
 <html>
 <head>
+<base href="<%=basePath%>">
 <title>报单系统</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport"  content="width=device-width, initial-scale=1, user-scalable=no">
-<link rel="stylesheet" href="/lib/weui.css">
-<link rel="stylesheet" href="/css/jquery-weui.css">
-<link rel="stylesheet" href="/css/demos.css">
+<link rel="stylesheet" href="lib/weui.css">
+<link rel="stylesheet" href="css/jquery-weui.css">
+<link rel="stylesheet" href="css/demos.css">
 
 </head>
 
 <body ontouchstart>
-
-
 	<header class='demos-header'>
 		<p class="demos-title">我的个人信息</p>
 	</header>
@@ -47,9 +50,7 @@
 					<input class="weui-input" id="password" name="password" type="password" >
 				</div>
 			</div>
-			
 
-			
 			<div class="weui-cell">
 				<div class="weui-cell__hd">
 					<label class="weui-label">群昵称</label>
@@ -90,14 +91,14 @@
 	</form>
  <%@ include file="footer.jsp"%>
 
-<script src="/lib/jquery-2.1.4.js"></script>
-<script src="/lib/fastclick.js"></script>
+<script src="lib/jquery-2.1.4.js"></script>
+<script src="lib/fastclick.js"></script>
 <script>
 	$(function() {
 		FastClick.attach(document.body);
 	});
 </script>
-<script src="/js/jquery-weui.js"></script>
+<script src="js/jquery-weui.js"></script>
 <script> 	
 $(document).ready(function() {
 	
@@ -133,7 +134,7 @@ $(document).ready(function() {
  			return;
  		}
  		$.ajax({
-		      url: '/loginRegister/updateUserInfo',
+		      url: 'loginRegister/updateUserInfo',
 		      type: 'POST',
 		      data : $('#updateForm').serialize(),
 		      success: function(){

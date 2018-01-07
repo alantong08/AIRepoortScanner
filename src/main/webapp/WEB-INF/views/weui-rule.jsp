@@ -1,17 +1,22 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()+ path + "/";
+%>	
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>jQuery WeUI</title>
-    <meta charset="utf-8">
+<head>
+<base href="<%=basePath%>">
+<title>报单系统</title>
+<meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="viewport"  content="width=device-width, initial-scale=1, user-scalable=no">
+<link rel="stylesheet" href="lib/weui.css">
+<link rel="stylesheet" href="css/jquery-weui.css">
+<link rel="stylesheet" href="css/demos.css">
 
-<link rel="stylesheet" href="/lib/weui.min.css">
-<link rel="stylesheet" href="/css/jquery-weui.css">
-<link rel="stylesheet" href="/css/demos.css">
-
-  </head>
+</head>
 
   <body ontouchstart>
 
@@ -38,15 +43,15 @@
         </section>
       </section>
     </article>
- <a href="/tabbar" class="weui-btn weui-btn_plain-default">返回主页</a>
-    <script src="/lib/jquery-2.1.4.js"></script>
-<script src="/lib/fastclick.js"></script>
+ <a href="tabbar" class="weui-btn weui-btn_plain-default">返回主页</a>
+    <script src="lib/jquery-2.1.4.js"></script>
+<script src="lib/fastclick.js"></script>
 <script>
   $(function() {
     FastClick.attach(document.body);
   });
 </script>
-<script src="/js/jquery-weui.js"></script>
+<script src="js/jquery-weui.js"></script>
 
   </body>
 </html>

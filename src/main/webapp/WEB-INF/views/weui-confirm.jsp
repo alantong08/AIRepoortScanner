@@ -1,15 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()+ path + "/";
+%>	
 <!DOCTYPE html>
 <html>
   <head>
+  	<base href="<%=basePath%>">
     <title>报单系统</title>
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-<link rel="stylesheet" href="/lib/weui.min.css">
-<link rel="stylesheet" href="/css/jquery-weui.css">
-<link rel="stylesheet" href="/css/demos.css">
+<link rel="stylesheet" href="lib/weui.min.css">
+<link rel="stylesheet" href="css/jquery-weui.css">
+<link rel="stylesheet" href="css/demos.css">
 
   </head>
 
@@ -111,14 +116,14 @@
   	<p class="weui-footer__text">Copyright © 2008-2018 兔少</p>
 	</div>
  
-<script src="/lib/jquery-2.1.4.js"></script>
-<script src="/lib/fastclick.js"></script>
+<script src="lib/jquery-2.1.4.js"></script>
+<script src="lib/fastclick.js"></script>
 <script>
   $(function() {
     FastClick.attach(document.body);
   });
 </script>
-<script src="/js/jquery-weui.js"></script>
+<script src="js/jquery-weui.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		
@@ -138,7 +143,7 @@
 		$("#comment").val(orderDetail.comment);
 		$("#imageName").val(orderDetail.imageName);
 		
-		$.post("/user/tess4j/merchant", function(data){
+		$.post("user/tess4j/merchant", function(data){
 			for(var i=0;i<data.length;i++){
 				$("#merchantName").append("<option value='"+data[i].merchantId+"'>"+data[i].merchantName+"</option>");
 			}
@@ -150,7 +155,7 @@
 	$(function() {
 		$('#ff').submit(function(){
 		    $.ajax({
-		      url: '/user/tess4j/saveBillOrder/',
+		      url: 'user/tess4j/saveBillOrder/',
 		      type: 'POST',
 		      data : $('#ff').serialize(),
 		      success: function(response){

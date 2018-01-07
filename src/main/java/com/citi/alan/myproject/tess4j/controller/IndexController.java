@@ -9,13 +9,13 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class IndexController {
     
-    @RequestMapping(value={"","/","index"})
+    @RequestMapping(value={"","/myproject","index"})
     public String index(HttpServletRequest request){
     	Object mobile = request.getSession().getAttribute("mobile");
     	if(mobile==null)
-        return "weui-login";
+        return "/weui-login";
     	else
-    		return "tabbar";
+    		return "/tabbar";
     }
     
     
@@ -65,13 +65,13 @@ public class IndexController {
         return "/user/confirm";
     }
     
-    @RequestMapping(value={"tabbar"})
+    @RequestMapping(value={"tabbar"}) 
     public String tabbar(HttpServletRequest request){ 
     	Object mobile = request.getSession().getAttribute("mobile");
     	if(mobile==null)
-        return "weui-login";
+        return "/weui-login";
     	else
-    		return "tabbar";
+    		return "/tabbar";
     
 
     }
@@ -96,11 +96,11 @@ public class IndexController {
         return "/weui-confirm";
     }
     
-    @RequestMapping(value={"weiuiMsg"})
-    public String weiuiMsg(){
+    @RequestMapping(value={"weuiMsg"})
+    public String weuiMsg(){
         return "/weui-msg";
     }
-    
+
     @RequestMapping(value={"/weiuiSearchBar"})
     public ModelAndView weiuiSearchBar(HttpServletRequest request){
     		String mobile = (String) request.getSession().getAttribute("mobile");

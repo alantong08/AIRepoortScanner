@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,23 +21,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequestMapping("/loginRegister")
 @RestController
 public class UserLoginController {
-
+	
+	private static Logger logger = Logger.getLogger(UserLoginController.class);
+	
     @Autowired
     private UserInfoService userInfoService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public UserLoginDetail login(@RequestParam("mobile") String mobile,@RequestParam("password") String password, HttpServletRequest request ) {
+        logger.info("mobile No. is :"+mobile);
         
         request.getSession().setAttribute("mobile", mobile);
         String viewName = "";
         UserLoginDetail userLoginDetail = null;  
-        try { 
+        try {
             userLoginDetail = userInfoService.login(mobile, password);
             if (userLoginDetail.getMobile() != null) {               
-                viewName = "/tabbar";
+                viewName = "tabbar";
             }else{
             	userLoginDetail.setMessage("failed");
-                viewName = "/weuiLogin";
+                viewName = "weuiLogin";
             }
            
             userLoginDetail.setView(viewName);
@@ -57,15 +61,15 @@ public class UserLoginController {
             BeanUtils.populate(userInfo, data);
             userLoginDetail = userInfoService.register(userInfo);
             if (userLoginDetail.isRegistered()) {
-                viweName = "/register";
+                viweName = "weuiRegister";
             }else{
                 request.getSession().setAttribute("mobile", userInfo.getMobile());
-                viweName = "/tabbar";
+                viweName = "tabbar"; 
             }
             userLoginDetail.setView(viweName);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         return userLoginDetail;
     }
@@ -80,14 +84,14 @@ public class UserLoginController {
 			UserInfo userInfo = userInfoService.getUserByMobile(mobile);
 			if (userInfo != null) {
 				BeanUtils.copyProperties(userLoginDetail, userInfo);
-				viweName = "/weui-myself";
+				viweName = "weui-myself";
 			} else {
-				viweName = "/weui-login";
+				viweName = "weui-login";
 			}
 			mView.setViewName(viweName);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -104,7 +108,7 @@ public class UserLoginController {
             BeanUtils.populate(userInfo, data);
             result = userInfoService.updateUserInfo(userInfo);
         } catch (Exception e) {
-            e.printStackTrace();
+        		logger.error(e);
         }
         return result;
     }

@@ -1,15 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()+ path + "/";
+%>	
 <!DOCTYPE html>
 <html>
 <head>
+<base href="<%=basePath%>">
 <title>报单系统</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<link rel="stylesheet" href="/lib/weui.css">
-<link rel="stylesheet" href="/css/jquery-weui.css">
-<link rel="stylesheet" href="/css/demos.css">
+<link rel="stylesheet" href="lib/weui.css">
+<link rel="stylesheet" href="css/jquery-weui.css">
+<link rel="stylesheet" href="css/demos.css">
 
 </head>
 
@@ -44,25 +49,25 @@
 
 		<div class="weui-btn-area">
 			<a class="weui-btn weui-btn_primary" id="showTooltips" >登录</a>
-			<a href="/weuiRegister" class="weui-btn weui-btn_default">注册</a>
+			<a href="weuiRegister" class="weui-btn weui-btn_default">注册</a>
 		</div>
 	</form>
 	<div class="weui-footer weui-footer_fixed-bottom">
   <p class="weui-footer__text">Copyright © 2008-2018 兔少</p>
 	</div>
 
-<script src="/lib/jquery-2.1.4.js"></script>
-<script src="/lib/fastclick.js"></script>
+<script src="lib/jquery-2.1.4.js"></script>
+<script src="lib/fastclick.js"></script>
 <script>
 	$(function() {
 		FastClick.attach(document.body);
 	});
 </script>
-<script src="/js/jquery-weui.js"></script>
+<script src="js/jquery-weui.js"></script>
 <script>
  	$("#showTooltips").click(function() {
 	    $.ajax({
-		      url: '/loginRegister/login',
+		      url: 'loginRegister/login',
 		      type: 'POST',
 		      data : $('#loginForm').serialize(),
 		      success: function(response){

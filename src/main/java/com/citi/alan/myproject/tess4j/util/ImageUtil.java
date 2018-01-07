@@ -3,6 +3,7 @@ package com.citi.alan.myproject.tess4j.util;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -15,11 +16,13 @@ import net.sourceforge.tess4j.TesseractException;
 @Component
 public class ImageUtil {
 
-    
+	private static Logger logger = Logger.getLogger(ImageUtil.class);
+	
     @Value("${upload.file.path}")
     private String uploadFilePath;
     
     public String  processImageThreshold(String absoluteFilePath){
+    		logger.info("******processImageThreshold()*********");
         long lStartTime = System.currentTimeMillis();
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         Mat image = Imgcodecs.imread(absoluteFilePath, Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);
@@ -31,7 +34,7 @@ public class ImageUtil {
         Imgcodecs.imwrite(newFile , dst);
         long lEndTime = System.currentTimeMillis();
         long output = (lEndTime - lStartTime);
-        System.out.println("processImageThreshold : Elapsed time in millseconds: " + output);
+        logger.info("processImageThreshold : Elapsed time in millseconds: " + output);
         return newFile;
     }
 

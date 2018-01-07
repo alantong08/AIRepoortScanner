@@ -1,12 +1,11 @@
 package com.citi.alan.myproject.tess4j.service.impl;
 
 import java.util.HashSet;
-import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 
 import com.citi.alan.myproject.tess4j.dao.RoleDao;
 import com.citi.alan.myproject.tess4j.dao.UserInfoDao;
@@ -17,7 +16,8 @@ import com.citi.alan.myproject.tess4j.service.api.UserInfoService;
 
 @Service
 public class UserInfoServiceImpl implements UserInfoService{
-
+	private static Logger logger = Logger.getLogger(UserInfoServiceImpl.class);
+	
     @Autowired
     private UserInfoDao userInfoDao;
     @Autowired
@@ -40,6 +40,7 @@ public class UserInfoServiceImpl implements UserInfoService{
 
     @Override
     public UserLoginDetail register(UserInfo data) {
+    		logger.info("******start to register()***********");
         UserInfo userInfo = userInfoDao.findByMobile(data.getMobile());
         UserLoginDetail userLoginDetail = new UserLoginDetail();
         if(userInfo!=null){ 

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +33,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RestController
 @RequestMapping("/user")
 public class TesseractController {
-
+	
+	private static Logger logger = Logger.getLogger(TesseractController.class);
+	
 	@Value("${upload.file.path}")
 	private String uploadFilePath;
 
@@ -51,6 +54,8 @@ public class TesseractController {
 	@RequestMapping(value = "/tess4j/submit", method = RequestMethod.POST)
 	@ResponseBody
 	public ModelAndView handleUploadFile(HttpServletRequest request) throws JsonProcessingException {
+		
+		logger.info("*****start to handleUploadFile*******");
 		BillOrderDetail detail = null;
 		String viewName = "";
 		try {
@@ -71,7 +76,7 @@ public class TesseractController {
 				viewName="weui-confirm";
 			}
 		} catch (Exception se) {
-			se.printStackTrace();
+			logger.error(se);
 			viewName="weui-500";
 		}
 
@@ -101,7 +106,7 @@ public class TesseractController {
 	    boolean flag = billOrderDetectorService.saveOrderDetail(billOrderDetail);
 	    ResponseResult responseResult  = new ResponseResult();
 	    responseResult.setStatus(flag);
-	    responseResult.setView("/weiuiMsg");
+	    responseResult.setView("weuiMsg");
 	    return responseResult;
 	    
 	}

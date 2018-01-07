@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,9 @@ import net.sourceforge.tess4j.TesseractException;
 @Service
 public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
 
+	private static Logger logger = Logger.getLogger(BillOrderDetectorServiceImpl.class);
+	
+	
     @Autowired
     private TessercatUtil tessercatUtil;
 
@@ -77,7 +81,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
 
         if (StringUtils.isAllEmpty(userName) && !StringUtils.isAllEmpty(scanDate)) {
             billOrderDetails = getOrdersByScanDate(scanDate);
-            return billOrderDetails;
+            return billOrderDetails; 
         }
 
         if (!StringUtils.isAllEmpty(userName) && StringUtils.isAllEmpty(scanDate)) {
@@ -89,7 +93,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             billOrderDetails = getAllBillOrderDetailList();
             return billOrderDetails;
         }
-        
+         
         return billOrderDetails;
 
     }
@@ -100,7 +104,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             List<OrderDetail> orderDetails = orderDetailDao.findByUserInfoUserNameOrderByCreatedDateDesc(userName);
             billOrderDetails = populateBillOrderDetails(orderDetails);
         } catch (Exception se) {
-            se.printStackTrace();
+            logger.error(se);
         }
         return billOrderDetails;
     }
@@ -111,7 +115,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             List<OrderDetail> orderDetails = orderDetailDao.findByScanDateAndUserInfoUserNameOrderByCreatedDateDesc(scanDate, userName);
             billOrderDetails = populateBillOrderDetails(orderDetails);
         } catch (Exception se) {
-            se.printStackTrace();
+        		logger.error(se);
         }
         return billOrderDetails;
     }
@@ -122,7 +126,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             List<OrderDetail> orderDetails = orderDetailDao.findByScanDateOrderByCreatedDateDesc(scanDate);
             billOrderDetails = populateBillOrderDetails(orderDetails);
         } catch (Exception se) {
-            se.printStackTrace();
+        		logger.error(se);
         }
         return billOrderDetails;
     }
@@ -133,7 +137,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             List<OrderDetail> orderDetails = orderDetailDao.findByUserInfoMobileOrderByCreatedDateDesc(mobile);
             billOrderDetails = populateBillOrderDetails(orderDetails);
         } catch (Exception se) {
-            se.printStackTrace();
+        		logger.error(se);
         }
         return billOrderDetails;
     }
@@ -165,7 +169,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             List<OrderDetail> orderDetails = orderDetailDao.findAll();
             billOrderDetails = populateBillOrderDetails(orderDetails);
         } catch (Exception se) {
-            se.printStackTrace();
+        		logger.error(se);
         }
         return billOrderDetails;
 
@@ -181,7 +185,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             orderDetailDao.save(orderDetail);
             flag = true;
         } catch (Exception e) {
-            e.printStackTrace();
+        		logger.error(e);
         } 
         return flag;
     }
@@ -199,7 +203,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             orderDetailDao.save(orderDetail);
             flag = true;
         } catch (Exception e) {
-            e.printStackTrace();
+        		logger.error(e);
         } 
         return flag;
     }
@@ -212,19 +216,19 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             String result = tessercatUtil.parseImage(new File(newFile));
 
             if (result.contains(alipayIdentifier)) {
-                System.out.println("this is alipay");
+                logger.info("this is alipay");
                 billOrderDetail = processAlipayOrder(result, activityType);
                 // chceckMerchantIsAllowed();
             } else if (result.contains(elianIdentifier)) {
-                System.out.println("this is elian pay");
+                logger.info("this is elian pay");
                 billOrderDetail = processElianOrder(result, activityType);
             } else {
-                System.out.println("this is weixin pay");
+                logger.info("this is weixin pay");
                 billOrderDetail = processWeixinOrder(result, activityType);
             }
 
         } catch (IOException | TesseractException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
 
         setUserInfoDetail(billOrderDetail, user, activityType);
@@ -315,14 +319,14 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             resultMap.put(key.trim(), value.trim());
         }
         for (Map.Entry<String, String> entry : resultMap.entrySet()) {
-            System.out.println("key:" + entry.getKey() + "\t value:" + entry.getValue());
+            logger.info("key:" + entry.getKey() + "\t value:" + entry.getValue());
         }
 
         try {
             String date = resultMap.get("创建时间").replaceAll("o", "0").replaceAll("O", "0");
             setScanDate(billOrderDetail, date);
         } catch (Exception se) {
-            se.printStackTrace();
+            logger.error(se);
         }
 
         try {
@@ -333,7 +337,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             // Merchant merchant = map.get(merchantsNo);
             billOrderDetail.setMerchantName(merchantsNo);
         } catch (Exception se) {
-            se.printStackTrace();
+            logger.error(se);
         }
 
         try {
@@ -365,7 +369,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             billOrderDetail.setDiscountedPrice(decimalFormat.format(randomDiscountedPrice));
             billOrderDetail.setActualPrice(decimalFormat.format(actualAmount));
         } catch (Exception se) {
-            se.printStackTrace();
+            logger.error(se);
         }
 
         billOrderDetail.setTransferType(TransferType.ALIPAY.getValue());
@@ -418,21 +422,21 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
                     value = value.trim();
                 }
 
-            } else if (key.contains("订单编号")) {
+            } else if (key.contains("订单编号") || key.contains("订单号")) {
                 key = "商户订单号";
             }
             resultMap.put(key.trim(), value.trim());
         }
 
         for (Map.Entry<String, String> entry : resultMap.entrySet()) {
-            System.out.println("key:" + entry.getKey() + "\t value:" + entry.getValue());
+            logger.info("key:" + entry.getKey() + "\t value:" + entry.getValue());
         }
 
         try {
             String date = resultMap.get("支付时间").replaceAll("o", "0").replaceAll("O", "0");
             setScanDate(billOrderDetail, date);
         } catch (Exception se) {
-            se.printStackTrace();
+            logger.error(se);
         }
 
         try {
@@ -441,15 +445,15 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             String merchantsNo = orderNum.substring(0, 12);
             billOrderDetail.setMerchantName(merchantsNo);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         try {
-            String orderAmount = resultMap.get("订单金额").replaceAll("o", "0").replaceAll(",", "").replaceAll("，", "");
-            orderAmount = orderAmount.substring(0, orderAmount.indexOf(".")).replace(" ", "");
+            String orderAmount = resultMap.get("订单金额").replaceAll("¥", "").replaceAll("O", "0").replaceAll("o", "0").replaceAll(",", "").replaceAll("，", "").replace(" ", "").trim();
+            orderAmount = orderAmount.substring(0, orderAmount.indexOf(".")+2);
             float orderPrice = Float.valueOf(orderAmount);
             billOrderDetail.setActualPrice(decimalFormat.format(orderPrice));
         } catch (Exception se) {
-            se.printStackTrace();
+            logger.error(se);
         }
 
         billOrderDetail.setTransferType(TransferType.ELIANPAY.getValue());
@@ -481,7 +485,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             String date = resultMap.get("支付时间").replaceAll("o", "0").replaceAll("O", "0");
             setScanDate(billOrderDetail, date);
         } catch (Exception se) {
-            se.printStackTrace();
+            logger.error(se);
         }
 
         try {
@@ -490,15 +494,15 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             String merchantsNo = orderNum.substring(0, 12);
             billOrderDetail.setMerchantName(merchantsNo);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
 
         try {
-            String orderAmount = resultMap.get("付款金额").substring(1).replaceAll("o", "0").replaceAll(" ", "");
+            String orderAmount = resultMap.get("付款金额").substring(1).replaceAll("o", "0").replaceAll("O", "0").replaceAll(" ", "");
             float orderPrice = Float.valueOf(orderAmount);
             billOrderDetail.setActualPrice(decimalFormat.format(orderPrice));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
 
         billOrderDetail.setTransferType(TransferType.WEIXINPAY.getValue());

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,7 +19,9 @@ import com.citi.alan.myproject.tess4j.service.api.UserInfoService;
 @RequestMapping("/admin")
 @RestController
 public class AdminController {
-    
+	
+	private static Logger logger = Logger.getLogger(AdminController.class);
+	
     @Autowired
     private BillOrderDetectorService billOrderDetectorService;
 
@@ -44,7 +47,7 @@ public class AdminController {
             }
             userLoginDetail.setView(viewName);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         return userLoginDetail;
     }
@@ -61,7 +64,7 @@ public class AdminController {
             billOrderDetails = billOrderDetectorService.getBillOrderDetailList(name, scanDate);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         return billOrderDetails;
     }
@@ -73,7 +76,7 @@ public class AdminController {
             System.out.println(flag);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         return "success";
     }

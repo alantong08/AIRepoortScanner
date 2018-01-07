@@ -1,24 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()+ path + "/";
+%>		
 <!doctype html>
 <html>
 <head>
+<base href="<%=basePath%>">
 <meta charset="UTF-8">
 <meta name="viewport"
 	content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<link rel="stylesheet" type="text/css"
-	href="/easyui/themes/metro/easyui.css">
-<link rel="stylesheet" type="text/css" href="/easyui/themes/mobile.css">
-<link rel="stylesheet" type="text/css" href="/easyui/themes/icon.css">
-<script type="text/javascript" src="/easyui/jquery.min.js"></script>
-<script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="/easyui/jquery.easyui.mobile.js"></script>
+<link rel="stylesheet" type="text/css" href="easyui/themes/metro/easyui.css">
+<link rel="stylesheet" type="text/css" href="easyui/themes/mobile.css">
+<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css">
+<script type="text/javascript" src="easyui/jquery.min.js"></script>
+<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="easyui/jquery.easyui.mobile.js"></script>
 <script type="text/javascript">
 
 	$(function() {
 		$('#loginForm').submit(function(){
 		    $.ajax({
-		      url: '/admin/login',
+		      url: 'admin/login',
 		      type: 'POST',
 		      data : $('#loginForm').serialize(),
 		      success: function(response){
@@ -44,7 +48,7 @@
 
 		<div
 			style="margin: 20px auto; width: 100px; height: 100px; border-radius: 100px; overflow: hidden">
-			<img src="/easyui/images/login1.jpg"
+			<img src="easyui/images/login1.jpg"
 				style="margin: 0; width: 100%; height: 100%;">
 		</div>
 

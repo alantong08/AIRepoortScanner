@@ -3,8 +3,11 @@ package com.citi.alan.myproject.tess4j.util;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.apache.log4j.Logger;
+
 public class DateUtil {
-    
+	private static Logger logger = Logger.getLogger(ImageUtil.class);
+	
     private DateUtil(){}
     
     public static String getFormatDateStr(String pattern){
@@ -14,7 +17,7 @@ public class DateUtil {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
             result = dateTime.format(formatter);
         }catch(Exception se){
-            se.printStackTrace();
+            logger.error(se);
         }
         return result;
     }
