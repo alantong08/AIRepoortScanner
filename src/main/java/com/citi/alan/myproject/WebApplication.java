@@ -1,8 +1,5 @@
 package com.citi.alan.myproject;
 
-import java.io.InputStream;
-import java.util.Properties;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -13,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 
 @PropertySource({
-    "classpath:properties/env-${spring.profiles.platform}.properties"
+    "classpath:properties/env-${spring.profiles.active}.properties"
 })
 @SpringBootApplication
 public class WebApplication extends SpringBootServletInitializer{
@@ -24,18 +21,12 @@ public class WebApplication extends SpringBootServletInitializer{
       }
     
     public static void main(String[] args) throws Exception {
-    	    Properties properties = new Properties();  
-        InputStream in = WebApplication.class.getClassLoader().getResourceAsStream("app.properties");  
-        properties.load(in);  
-        SpringApplication app = new SpringApplication(WebApplication.class);  
-        app.setDefaultProperties(properties);  
-        app.run(args);  
+        SpringApplication.run(WebApplication.class, args);  
     }
     
     @Override  
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {   
-        builder.sources(this.getClass());  
-        return super.configure(builder);  
+        return builder.sources(this.getClass());  
     }  
     
     @Bean
