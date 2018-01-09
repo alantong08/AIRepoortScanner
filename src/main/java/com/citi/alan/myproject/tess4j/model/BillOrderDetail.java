@@ -4,21 +4,35 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
+
 public class BillOrderDetail implements Serializable{
 
     private static final long serialVersionUID = 1L;
+    @Excel(name= "扫描日期", width=20, isImportField="trus_st")
     private String scanDate;
+    @Excel(name= "姓名", width=20, isImportField="trus_st")
     private String userName;
+    @Excel(name= "群昵称", width=20, isImportField="trus_st")
     private String nickName;
+    @Excel(name= "订单号", width=40, isImportField="trus_st")
     private String orderNum;
+    @Excel(name= "商户名", width=20, isImportField="trus_st")
     private String merchantName;
+    @Excel(name= "月底助攻", width=30, replace={"月底助攻_1", "月底不助攻_2" }, isImportField="trus_st")
     private String activityType;
+    @Excel(name= "费率", width=20, isImportField="trus_st")
     private String rate; 
+    @Excel(name= "扫码额度", width=20, isImportField="trus_st")
     private String actualPrice;
     private String discountedPrice;
     private String totalPrice;
+    @Excel(name= "月底助攻", width=30, replace={"阿联_1", "阿信_2" , "阿宝_3" }, isImportField="trus_st")
     private String transferType;
+    @Excel(name= "备注", width=20, isImportField="trus_st")
     private String comment;
+    @Excel(name= "支付宝", width=20, isImportField="trus_st")
     private String alipayAccount;
     private String mobile;
     private String createdDate;

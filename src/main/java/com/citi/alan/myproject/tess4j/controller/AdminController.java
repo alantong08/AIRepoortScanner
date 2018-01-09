@@ -58,7 +58,7 @@ public class AdminController {
     public List<BillOrderDetail> getOrderList(HttpServletRequest request ) {
         String scanDate=request.getParameter("scanDate");
         String name=request.getParameter("name");
-        System.out.println("scanDate:"+scanDate+" name:"+name);
+        logger.info("scanDate:"+scanDate+" name:"+name);
          List<BillOrderDetail> billOrderDetails = new ArrayList<>();
         try { 
             billOrderDetails = billOrderDetectorService.getBillOrderDetailList(name, scanDate);
@@ -73,12 +73,14 @@ public class AdminController {
     public String saveOrderList(BillOrderDetail billOrderDetail, HttpServletRequest request ) { 
         try { 
             Boolean flag = billOrderDetectorService.updateOrderDetail(billOrderDetail);
-            System.out.println(flag);
+            logger.info(flag);
 
         } catch (Exception e) {
             logger.error(e);
         }
         return "success";
     }
+    
+
 
 }

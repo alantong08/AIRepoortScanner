@@ -50,13 +50,16 @@
         </thead>
     </table>
     <div id="toolbar">
+    <form id="ff" method="post" action="admin/download" >
 		<div>
 			<span>姓名:</span>
 			<input id="name2" name="name2" class="easyui-textbox" /> 
 			<span>扫码日期:</span> 
 			<input id="scanDate" name="scanDate" class="easyui-datebox" /> 
-			<a class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="doSearch()">Search</a>
+			<a class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="doSearch()">查询</a>
+			<a class="easyui-linkbutton" iconCls="icon-export-to-excel" plain="true" onclick="doExport()">导出</a>
 		</div>
+	</form>
     </div>
 <script type="text/javascript">
   	$(function() {
@@ -81,9 +84,7 @@
   	        }
 
   	    });
-  		
 
-  		
   		$("#orderEDataGridAutoSave").initEdatagrid({
   			url : "admin/getOrderList",
   			updateUrl : "admin/saveOrder",
@@ -108,17 +109,22 @@
   	
   	});
   	
-	 doSearch=function() {
+	 function doSearch() {
 			$("#orderEDataGridAutoSave").edatagrid("load", {
 				name : $("#name2").val(),
 				scanDate : $("#scanDate").combobox("getValue")
 			});
-		}
+	 }
 	 
 	 function imgFormatter(value,row,index){	 
 		var element = '<a href='+value+'  target="_blank"><img style="width:30px; height:30px" src=' + value + '/></a>';
 		return element;
-	}
+	 }
+	 
+	 function doExport(){
+		 $('#ff').submit();
+	 }
+	 
 	 
 
 </script>

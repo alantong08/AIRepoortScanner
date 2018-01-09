@@ -34,6 +34,9 @@
 .icon-search{
 	background:url('icons/search.png') no-repeat center center;
 }
+.icon-export-to-excel{
+	background:url('icons/excel.png') no-repeat center center;
+}
 .icon-print{
 	background:url('icons/print.png') no-repeat center center;
 }
