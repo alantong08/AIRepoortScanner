@@ -26,7 +26,7 @@
 <body>
     <h2>报单查询</h2>
     
-    <table id="orderEDataGridAutoSave"  title="报单记录" style="width:80%;height:500px"
+    <table id="orderEDataGridAutoSave"  title="报单记录" style="width:80%;height:700px"
             toolbar="#toolbar" pagination="true" idField="id"
             rownumbers="true" fitColumns="true">
         <thead>
@@ -97,14 +97,13 @@
   			checkbox : true,
   			checkOnSelect : true,
   			singleSelect : true,
-  			//queryParam:{"rows":dg.datagrid("options").pageSize},
   			clickEdit : false, //单击编辑
   			showMsg : false, // 显示操作消息
   			/*
   			 * 分页控制
   			 */
-  			pageSize:5,
-  			pageList: [5, 10, 15,20]
+  			pageSize:20,
+  			pageList: [20, 30, 40, 50]
   		});
   	
   	});
@@ -122,6 +121,7 @@
 	 }
 	 
 	 function doExport(){
+		alert("系统将导出当天所有扫码日期数据。");
 		 $('#ff').submit();
 	 }
 	 

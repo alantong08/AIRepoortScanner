@@ -2,6 +2,9 @@ package com.citi.alan.myproject.tess4j.service.api;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.data.domain.Pageable;
 
 import com.citi.alan.myproject.tess4j.entity.UserInfo;
 import com.citi.alan.myproject.tess4j.model.BillOrderDetail;
@@ -14,9 +17,12 @@ public interface BillOrderDetectorService {
     
     public List<BillOrderDetail> getBillOrderDetailList(String mobile);
     
-    public List<BillOrderDetail> getBillOrderDetailList(String userName, String scanDate);
+    public Map<String, Object> getBillOrderDetailList(String userName, String scanDate, Pageable pagRequest);
     
+    public List<BillOrderDetail> getExportingBillOrderDetailList(String scanDate);
+
     public boolean updateOrderDetail(BillOrderDetail billOrderDetail) ;
+    
     
    
 }

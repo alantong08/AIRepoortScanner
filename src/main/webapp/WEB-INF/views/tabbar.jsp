@@ -93,12 +93,12 @@
           里程
         </p>
       </a>
-      <a href="javascript:;" class="weui-grid js_grid">
+      <a href="weuiLogout" class="weui-grid js_grid">
         <div class="weui-grid__icon">
           <img src="images/icon_nav_dialog.png" alt="">
         </div>
         <p class="weui-grid__label">
-          小知识
+          	退出
         </p>
       </a>
     </div>

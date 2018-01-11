@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.citi.alan.myproject.tess4j.config.WebSecurityConfig;
 import com.citi.alan.myproject.tess4j.entity.Merchant;
 import com.citi.alan.myproject.tess4j.entity.UserInfo;
 import com.citi.alan.myproject.tess4j.model.BillOrderDetail;
@@ -61,7 +62,7 @@ public class TesseractController {
 		try {
 			String activityType = request.getParameter("activityType");
 			MultipartFile multipart = ((MultipartHttpServletRequest) request).getFile("file-order");
-			String mobile = (String) request.getSession().getAttribute("mobile");
+			String mobile = (String) request.getSession().getAttribute(WebSecurityConfig.SESSION_KEY);
 			UserInfo user = userInfoService.getUserByMobile(mobile);
 			String originalFileName = multipart.getOriginalFilename();
 			if (multipart != null && originalFileName != null && originalFileName.length() > 0) {
@@ -101,7 +102,7 @@ public class TesseractController {
 	@RequestMapping(value = "/tess4j/saveBillOrder", method = RequestMethod.POST)
 	@ResponseBody
 	ResponseResult saveForm(BillOrderDetail billOrderDetail, HttpServletRequest request)  {
-	    String mobile = (String) request.getSession().getAttribute("mobile");
+	    String mobile = (String) request.getSession().getAttribute(WebSecurityConfig.SESSION_KEY);
 	    billOrderDetail.setMobile(mobile);
 	    boolean flag = billOrderDetectorService.saveOrderDetail(billOrderDetail);
 	    ResponseResult responseResult  = new ResponseResult();

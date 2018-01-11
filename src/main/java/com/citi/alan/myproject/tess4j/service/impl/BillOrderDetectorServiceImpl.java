@@ -14,8 +14,13 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.impl.jam.mutable.MPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.citi.alan.myproject.tess4j.dao.OrderDetailDao;
@@ -63,7 +68,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
     @Value("${elian.identifier}")
     private String elianIdentifier;
 
-    private Map<String, Merchant> map = new HashMap<String, Merchant>();
+    private Map<String, Merchant> map = new HashMap<>();
 
     private DecimalFormat decimalFormat = new DecimalFormat(".00");
 
@@ -72,63 +77,71 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
         map = merchantService.getMerchantMap();
     }
 
-    public List<BillOrderDetail> getBillOrderDetailList(String userName, String scanDate) {
-        List<BillOrderDetail> billOrderDetails = new ArrayList<>();
+    public Map<String, Object> getBillOrderDetailList(String userName, String scanDate, Pageable pagRequest) {
+        Map<String, Object> result = new HashMap<>();
         if (!StringUtils.isAllEmpty(userName) && !StringUtils.isAllEmpty(scanDate) ) {
-            billOrderDetails = getOrdersByUserNameAndScanDate(userName, scanDate);
-            return billOrderDetails;
+            return getOrdersByUserNameAndScanDate(userName, scanDate, pagRequest);
         }
 
         if (StringUtils.isAllEmpty(userName) && !StringUtils.isAllEmpty(scanDate)) {
-            billOrderDetails = getOrdersByScanDate(scanDate);
-            return billOrderDetails; 
+            return getOrdersByScanDate(scanDate, pagRequest);
         }
 
         if (!StringUtils.isAllEmpty(userName) && StringUtils.isAllEmpty(scanDate)) {
-            billOrderDetails = getOrdersByUserName(userName);
-            return billOrderDetails;
+            return getOrdersByUserName(userName, pagRequest);
         }
 
         if (StringUtils.isAllEmpty(userName) && StringUtils.isAllEmpty(scanDate)) {
-            billOrderDetails = getAllBillOrderDetailList();
-            return billOrderDetails;
+            return getAllBillOrderDetailList(pagRequest);
         }
          
-        return billOrderDetails;
+        return result;
 
     }
 
-    private List<BillOrderDetail> getOrdersByUserName(String userName) {
-        List<BillOrderDetail> billOrderDetails = new ArrayList<>();
+    private Map<String, Object> getOrdersByUserName(String userName, Pageable pagRequest) {
+        Map<String, Object> result = new HashMap<>();
         try {
-            List<OrderDetail> orderDetails = orderDetailDao.findByUserInfoUserNameOrderByCreatedDateDesc(userName);
-            billOrderDetails = populateBillOrderDetails(orderDetails);
+            Page<OrderDetail> page = orderDetailDao.findByUserInfoUserNameOrderByCreatedDateDesc(userName, pagRequest);
+            result = createResultMap(page);
         } catch (Exception se) {
             logger.error(se);
         }
-        return billOrderDetails;
+        return result;
     }
 
-    private List<BillOrderDetail> getOrdersByUserNameAndScanDate(String userName, String scanDate) {
-        List<BillOrderDetail> billOrderDetails = new ArrayList<>();
+    private Map<String, Object> getOrdersByUserNameAndScanDate(String userName, String scanDate, Pageable pagRequest) {
+        Map<String, Object> result = new HashMap<>();
         try {
-            List<OrderDetail> orderDetails = orderDetailDao.findByScanDateAndUserInfoUserNameOrderByCreatedDateDesc(scanDate, userName);
-            billOrderDetails = populateBillOrderDetails(orderDetails);
+            Page<OrderDetail> page = orderDetailDao.findByScanDateAndUserInfoUserNameOrderByCreatedDateDesc(scanDate, userName, pagRequest);
+            result = createResultMap(page);
         } catch (Exception se) {
         		logger.error(se);
         }
-        return billOrderDetails;
+        return result;
     }
 
-    private List<BillOrderDetail> getOrdersByScanDate(String scanDate) {
-        List<BillOrderDetail> billOrderDetails = new ArrayList<>();
+    private Map<String, Object> getOrdersByScanDate(String scanDate, Pageable pagRequest) {
+        Map<String, Object> result = new HashMap<>();
         try {
-            List<OrderDetail> orderDetails = orderDetailDao.findByScanDateOrderByCreatedDateDesc(scanDate);
-            billOrderDetails = populateBillOrderDetails(orderDetails);
+            Page<OrderDetail> page = orderDetailDao.findByScanDateOrderByCreatedDateDesc(scanDate, pagRequest);
+            result = createResultMap(page);
         } catch (Exception se) {
         		logger.error(se);
         }
-        return billOrderDetails;
+        return result;
+    }
+    
+    private Map<String, Object> getAllBillOrderDetailList(Pageable pagRequest) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            Page<OrderDetail> page = orderDetailDao.findAll(pagRequest);
+            result = createResultMap(page);
+
+        } catch (Exception se) {
+            logger.error(se);
+        }
+        return result;
     }
 
     public List<BillOrderDetail> getBillOrderDetailList(String mobile) {
@@ -141,11 +154,22 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
         }
         return billOrderDetails;
     }
+    
+    public List<BillOrderDetail> getExportingBillOrderDetailList(String scanDate){
+        List<BillOrderDetail> billOrderDetails = new ArrayList<>();
+        try {
+            List<OrderDetail> orderDetails = orderDetailDao.findByScanDateOrderByCreatedDateDesc(scanDate);
+            billOrderDetails = populateBillOrderDetails(orderDetails);
+        } catch (Exception se) {
+                logger.error(se);
+        }
+        return billOrderDetails;
+    }
+
 
     private List<BillOrderDetail> populateBillOrderDetails(List<OrderDetail> orderDetails) throws IllegalAccessException, InvocationTargetException {
         List<BillOrderDetail> billOrderDetails = new ArrayList<>();
         if (orderDetails != null) {
-           // Collections.sort(orderDetails, (o1, o2) -> o2.getCreatedDate().compareTo(o1.getCreatedDate()));
             for (OrderDetail orderDetail : orderDetails) {
                 BillOrderDetail billOrderDetail = new BillOrderDetail();
                 BeanUtils.copyProperties(billOrderDetail, orderDetail);
@@ -162,17 +186,16 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
         return billOrderDetails;
     }
 
-    private List<BillOrderDetail> getAllBillOrderDetailList() {
-        List<BillOrderDetail> billOrderDetails = new ArrayList<>();
-        try {
-           // Pageable pagRequest = new PageRequest(1, 10, new Sort(Sort.Direction.DESC,"createdDate"));
-            List<OrderDetail> orderDetails = orderDetailDao.findAll();
-            billOrderDetails = populateBillOrderDetails(orderDetails);
-        } catch (Exception se) {
-        		logger.error(se);
-        }
-        return billOrderDetails;
 
+
+    private Map<String, Object> createResultMap(Page<OrderDetail> page) throws IllegalAccessException, InvocationTargetException {
+        Map<String, Object> result = new HashMap<>();
+        List<OrderDetail> orderDetails = page.getContent();
+        List<BillOrderDetail> billOrderDetails = populateBillOrderDetails(orderDetails);
+        result.put("rows", billOrderDetails);
+        result.put("page", page.getNumber());
+        result.put("total", page.getTotalElements());
+        return result;
     }
     
     public boolean updateOrderDetail(BillOrderDetail billOrderDetail) {

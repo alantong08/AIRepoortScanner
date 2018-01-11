@@ -3,6 +3,7 @@ package com.citi.alan.myproject.tess4j.controller;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.citi.alan.myproject.tess4j.config.WebSecurityConfig;
 import com.citi.alan.myproject.tess4j.entity.UserInfo;
 import com.citi.alan.myproject.tess4j.model.UserLoginDetail;
 import com.citi.alan.myproject.tess4j.service.api.UserInfoService;
@@ -28,15 +30,14 @@ public class UserLoginController {
     private UserInfoService userInfoService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public UserLoginDetail login(@RequestParam("mobile") String mobile,@RequestParam("password") String password, HttpServletRequest request ) {
+    public UserLoginDetail login(@RequestParam("mobile") String mobile,@RequestParam("password") String password, HttpSession session) {
         logger.info("mobile No. is :"+mobile);
-        
-        request.getSession().setAttribute("mobile", mobile);
         String viewName = "";
         UserLoginDetail userLoginDetail = null;  
         try {
             userLoginDetail = userInfoService.login(mobile, password);
-            if (userLoginDetail.getMobile() != null) {               
+            if (userLoginDetail.getMobile() != null) {       
+                session.setAttribute(WebSecurityConfig.SESSION_KEY, mobile);
                 viewName = "tabbar";
             }else{
             	userLoginDetail.setMessage("failed");
@@ -45,14 +46,14 @@ public class UserLoginController {
            
             userLoginDetail.setView(viewName);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         return userLoginDetail;
     }
 
     
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public UserLoginDetail registerPage(@RequestParam Map<String, String> data, HttpServletRequest request) {
+    public UserLoginDetail registerPage(@RequestParam Map<String, String> data, HttpSession session) {
        
         String viweName = null;
         UserLoginDetail userLoginDetail = null;
@@ -63,7 +64,7 @@ public class UserLoginController {
             if (userLoginDetail.isRegistered()) {
                 viweName = "weuiRegister";
             }else{
-                request.getSession().setAttribute("mobile", userInfo.getMobile());
+                session.setAttribute(WebSecurityConfig.SESSION_KEY, userInfo.getMobile());
                 viweName = "tabbar"; 
             }
             userLoginDetail.setView(viweName);
@@ -80,7 +81,7 @@ public class UserLoginController {
 		String viweName = null;
 		UserLoginDetail userLoginDetail = new UserLoginDetail();
 		try {
-			String mobile = (String) request.getSession().getAttribute("mobile");
+			String mobile = (String) request.getSession().getAttribute(WebSecurityConfig.SESSION_KEY);
 			UserInfo userInfo = userInfoService.getUserByMobile(mobile);
 			if (userInfo != null) {
 				BeanUtils.copyProperties(userLoginDetail, userInfo);
@@ -101,7 +102,7 @@ public class UserLoginController {
 	}
     
     @RequestMapping(value = "/updateUserInfo", method = RequestMethod.POST)
-    public String updateUserInfo(@RequestParam Map<String, String> data, HttpServletRequest request) {      
+    public String updateUserInfo(@RequestParam Map<String, String> data) {      
         String result = "";
         try {
             UserInfo userInfo = new UserInfo();

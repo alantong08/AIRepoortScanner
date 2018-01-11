@@ -2,6 +2,7 @@ package com.citi.alan.myproject.tess4j.dao;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -16,15 +17,16 @@ public interface OrderDetailDao extends CrudRepository<OrderDetail, Integer>{
     
     public List<OrderDetail> findByUserInfoMobileOrderByCreatedDateDesc(String mobile);
     
-    public List<OrderDetail> findByUserInfoUserNameOrderByCreatedDateDesc(String userName);
-    
+    public List<OrderDetail> findByScanDateOrderByCreatedDateDesc(String scanDate);
+
     public List<OrderDetail> findAll();
     
-    public List<OrderDetail> findAll(Pageable pageable);
+    public Page<OrderDetail> findAll(Pageable pagRequest);
     
-    public List<OrderDetail> findByScanDateOrderByCreatedDateDesc(String scanDate);
+    public Page<OrderDetail> findByScanDateOrderByCreatedDateDesc(String scanDate, Pageable pagRequest);
     
-    public List<OrderDetail> findByScanDateAndUserInfoUserNameOrderByCreatedDateDesc(String scanDate, String userName);
+    public Page<OrderDetail> findByScanDateAndUserInfoUserNameOrderByCreatedDateDesc(String scanDate, String userName, Pageable pagRequest);
     
-
+    public Page<OrderDetail> findByUserInfoUserNameOrderByCreatedDateDesc(String userName, Pageable pagRequest);
+    
 }

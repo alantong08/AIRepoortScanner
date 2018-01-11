@@ -32,7 +32,7 @@
 				</div>
 				<div class="weui-cell__bd">
 					<input class="weui-input" id="mobile" name="mobile" type="number" pattern="[0-9]*"
-						placeholder="请输入手机号" value="18918297673">
+						placeholder="请输入手机号" >
 				</div>
 			</div>
 
@@ -41,7 +41,7 @@
 					<label class="weui-label">密码</label>
 				</div>
 				<div class="weui-cell__bd">
-					<input class="weui-input" id="password" name="password" type="password" placeholder="请输入密码" value="111111">
+					<input class="weui-input" id="password" name="password" type="password" placeholder="请输入密码" >
 				</div>
 			</div>
 
