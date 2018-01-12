@@ -14,13 +14,10 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.xmlbeans.impl.jam.mutable.MPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.citi.alan.myproject.tess4j.dao.OrderDetailDao;
@@ -241,7 +238,6 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             if (result.contains(alipayIdentifier)) {
                 logger.info("this is alipay");
                 billOrderDetail = processAlipayOrder(result, activityType);
-                // chceckMerchantIsAllowed();
             } else if (result.contains(elianIdentifier)) {
                 logger.info("this is elian pay");
                 billOrderDetail = processElianOrder(result, activityType);
@@ -402,7 +398,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
     }
 
 	private void setScanDate(BillOrderDetail billOrderDetail, String date) {
-		if (date.contains("-")) {
+		if (date.contains("-") || date.contains("_")) {
 			String year = date.substring(0, 4);
 			String month = date.substring(5, 7);
 			String day = date.substring(8, 10);
@@ -471,7 +467,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             logger.error(e);
         }
         try {
-            String orderAmount = resultMap.get("订单金额").replaceAll("¥", "").replaceAll("O", "0").replaceAll("o", "0").replaceAll(",", "").replaceAll("，", "").replace(" ", "").trim();
+            String orderAmount = resultMap.get("订单金额").replaceAll("′", "").replaceAll("¥", "").replaceAll("O", "0").replaceAll("o", "0").replaceAll(",", "").replaceAll("，", "").replace(" ", "").trim();
             orderAmount = orderAmount.substring(0, orderAmount.indexOf(".")+2);
             float orderPrice = Float.valueOf(orderAmount);
             billOrderDetail.setActualPrice(decimalFormat.format(orderPrice));
@@ -493,15 +489,20 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
 
         for (int i = 0; i < list.length; i++) {
             String singleLineResult = list[i];
+            if(singleLineResult.contains("商户 单号")){
+            		singleLineResult = singleLineResult.replace("商户 单号", "商户单号");
+            }
+
             String key = singleLineResult.substring(0, singleLineResult.indexOf(" ") + 1);
             String value = singleLineResult.substring(singleLineResult.indexOf(key) + key.length());
             if (key.contains("付款金额")) {
                 key = "付款金额";
-            } else if (value.contains("单号")) {
-                key = "商户订单号";
-                value = value.substring(value.indexOf("单号") + 3).trim();
-            }
+            } 
             resultMap.put(key.trim(), value.trim());
+        }
+        
+        for (Map.Entry<String, String> entry : resultMap.entrySet()) {
+            logger.info("key:" + entry.getKey() + "\t value:" + entry.getValue());
         }
 
         try {
@@ -512,7 +513,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
         }
 
         try {
-            String orderNum = resultMap.get("商户订单号").replaceAll("o", "0").replaceAll("O", "0");
+            String orderNum = resultMap.get("商户单号").replaceAll("o", "0").replaceAll("O", "0");
             billOrderDetail.setOrderNum(orderNum);
             String merchantsNo = orderNum.substring(0, 12);
             billOrderDetail.setMerchantName(merchantsNo);
@@ -521,7 +522,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
         }
 
         try {
-            String orderAmount = resultMap.get("付款金额").substring(1).replaceAll("o", "0").replaceAll("O", "0").replaceAll(" ", "");
+            String orderAmount = resultMap.get("付款金额").replaceAll("半", "").replaceAll("¥", "").replaceAll("O", "0").replaceAll("o", "0").replaceAll(",", "").replaceAll("，", "").replace(" ", "").trim();
             float orderPrice = Float.valueOf(orderAmount);
             billOrderDetail.setActualPrice(decimalFormat.format(orderPrice));
         } catch (Exception e) {
