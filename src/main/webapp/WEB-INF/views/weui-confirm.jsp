@@ -90,7 +90,9 @@
 					<option value="2">月底不助攻</option>
 					<option value="3">幸运星</option>
 					<option value="4">新人福利</option>
-					<option value="5">邀请福利</option>
+					<option value="5">邀请福利下月可用</option>
+					<option value="6">公众号福利</option>
+					<option value="7">回血活动返利</option>
 	          </select>
 	          </div>
 		  </div>
@@ -107,8 +109,8 @@
  			<div class="weui-cell__bd"><input class="weui-input" type="text" id="comment" name="comment"/></div>
 		  </div>		  		  		  		  
 		<div class="weui-btn-area">
-			<a class="weui-btn weui-btn_primary" id="showTooltips" onclick="$('#ff').submit()">提交</a>
-		
+			<a class="weui-btn weui-btn_primary" id="showTooltips">提交</a>
+			<a href="tabbar" class="weui-btn weui-btn_default">取消</a>
 		</div>
 		</div>
 	</form>
@@ -148,24 +150,53 @@
 		});
 	});
 	
+	$("#showTooltips").click(function() {
+		var scanDate= $("#scanDate").val();
+ 		if(!scanDate){
+ 			$("#scanDate").focus();
+ 			$.toptip('扫码日期不能为空', 'error');
+ 			return;
+ 		}
 
-	$(function() {
-		$('#ff').submit(function(){
-		    $.ajax({
-		      url: 'user/tess4j/saveBillOrder/',
-		      type: 'POST',
-		      data : $('#ff').serialize(),
-		      success: function(response){
-		    	  if(response.status == true){
-		    		  window.location.href = response.view;
-		    	 }else{
-		    		 alert("出现异常，请联系管理员");
-		    	 }
-		    	}
-		    });
-		    return false;
-		});
+ 		var orderNum = $("#orderNum").val();
+ 		if(!orderNum){
+ 			$.toptip('订单号不能为空', 'error');
+ 			$("#orderNum").focus();
+ 			return;
+ 		}
+ 		var merchantName = $("#merchantName").val();
+ 		if(!merchantName){
+ 			$.toptip('商户名不能为空', 'error');
+ 			$("#merchantName").focus();
+ 			return;
+ 		}
+ 		
+ 		var actualPrice = $("#actualPrice").val();
+ 		if(!actualPrice){
+ 			$.toptip('扫码金额不能为空', 'error');
+ 			$("#actualPrice").focus();
+ 			return;
+ 		}
+ 		
+ 		var rate = $("#rate").val();
+ 		if(!rate){
+ 			$.toptip('费率不能为空', 'error');
+ 			$("#rate").focus();
+ 			return;
+ 		}
+
+		$.ajax({
+	      url: 'user/tess4j/saveBillOrder/',
+	      type: 'POST',
+	      data : $('#ff').serialize(),
+	      success: function(response){
+	    	  if(response.status == true){
+	    		  window.location.href = response.view;
+	    	  }
+	    	}
+	    });
 	});
+	
 </script>
   </body>
 </html>

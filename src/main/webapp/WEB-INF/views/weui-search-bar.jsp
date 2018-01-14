@@ -39,7 +39,7 @@
 		</div>
 
 		<div class="weui-btn-area">
-			 <a class="weui-btn weui-btn_primary" id="searchButton">查询</a>
+			 <a class="weui-btn weui-btn_primary" id="searchButton">查询最近10条记录</a>
 		</div>
 	</form>
 	<br>

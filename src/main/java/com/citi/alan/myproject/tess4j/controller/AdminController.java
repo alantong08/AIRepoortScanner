@@ -33,7 +33,7 @@ public class AdminController {
 
     @Autowired
     private UserInfoService userInfoService;
-    
+     
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public UserLoginDetail login(@RequestParam("mobile") String mobile,@RequestParam("password") String password, HttpSession session) {
@@ -43,7 +43,7 @@ public class AdminController {
             userLoginDetail = userInfoService.login(mobile, password);
             if (userLoginDetail.getMobile() != null) {     
                 userLoginDetail.setMessage("success");
-                viewName = "/admin/home";
+                viewName = "admin/home";
                 session.setAttribute(WebSecurityConfig.SESSION_KEY, mobile);
             }else{
                 userLoginDetail.setMessage("failed");               

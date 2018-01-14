@@ -37,10 +37,10 @@ public class ExcelController {
         response.setHeader("Content-Disposition", "attachment;filename="+fileName);
         response.setContentType("application/vnd.ms-excel");
 
-        String scanDate = request.getParameter("scanDate");
+        String scanDate = request.getParameter("scanDate"); 
         if (StringUtils.isEmpty(scanDate)) {
             scanDate = currentDate;
-        }
+        } 
         logger.info("scanDate:" + scanDate);
         try {
             List<BillOrderDetail> billOrderDetails = billOrderDetectorService.getExportingBillOrderDetailList(scanDate);

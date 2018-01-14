@@ -18,6 +18,8 @@ public class WebApplication extends SpringBootServletInitializer{
     static {
         nu.pattern.OpenCV.loadShared();
         System.loadLibrary(org.opencv.core.Core.NATIVE_LIBRARY_NAME);
+        System.load("/home/apps/dll/liblept.so.4") ;
+
       }
     
     public static void main(String[] args) throws Exception {
@@ -28,7 +30,7 @@ public class WebApplication extends SpringBootServletInitializer{
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {   
         return builder.sources(this.getClass());  
     }  
-    
+     
     @Bean
     public EmbeddedServletContainerCustomizer containerCustomizer(){
            return new EmbeddedServletContainerCustomizer() {

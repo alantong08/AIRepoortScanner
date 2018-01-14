@@ -49,7 +49,7 @@ public class WebSecurityConfig extends WebMvcConfigurerAdapter {
                 return true;
 
             // 跳转登录
-            String url = "/weuiLogin";
+            String url = "./weuiLogin";
             response.sendRedirect(url);
             return false;
         }

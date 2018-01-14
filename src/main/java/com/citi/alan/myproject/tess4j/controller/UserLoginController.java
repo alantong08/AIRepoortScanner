@@ -62,7 +62,7 @@ public class UserLoginController {
             BeanUtils.populate(userInfo, data);
             userLoginDetail = userInfoService.register(userInfo);
             if (userLoginDetail.isRegistered()) {
-                viweName = "weuiRegister";
+                viweName = "weuiRegister"; 
             }else{
                 session.setAttribute(WebSecurityConfig.SESSION_KEY, userInfo.getMobile());
                 viweName = "tabbar"; 

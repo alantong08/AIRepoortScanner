@@ -16,7 +16,7 @@ import net.sourceforge.tess4j.TesseractException;
 public class TessercatUtil {
 
 	private static Logger logger = Logger.getLogger(TessercatUtil.class);
-	
+	 
     @Value("${tessdata.lib.path}")
     private String datapath;
     

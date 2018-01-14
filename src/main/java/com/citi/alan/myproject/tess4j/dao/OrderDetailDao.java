@@ -15,7 +15,7 @@ public interface OrderDetailDao extends CrudRepository<OrderDetail, Integer>{
     
     public List<OrderDetail> findByUserInfoOrderByCreatedDateDesc(UserInfo userInfo);
     
-    public List<OrderDetail> findByUserInfoMobileOrderByCreatedDateDesc(String mobile);
+    public List<OrderDetail> findByUserInfoMobile(String mobile, Pageable pagRequest);
     
     public List<OrderDetail> findByScanDateOrderByCreatedDateDesc(String scanDate);
 

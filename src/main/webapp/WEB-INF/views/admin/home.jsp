@@ -121,7 +121,13 @@
 	 }
 	 
 	 function doExport(){
-		alert("系统将导出当天所有扫码日期数据。");
+	   var scanDate= $("#scanDate").combobox("getValue");
+		if(!scanDate){
+			alert("请选择需要导出数据的日期");
+ 			$("#scanDate").focus();
+ 			return;
+ 		}
+		
 		 $('#ff').submit();
 	 }
 	 

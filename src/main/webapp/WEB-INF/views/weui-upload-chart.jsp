@@ -36,7 +36,9 @@
 					<option value="2">月底不助攻</option>
 					<option value="3">幸运星</option>
 					<option value="4">新人福利</option>
-					<option value="5">邀请福利</option>
+					<option value="5">邀请福利下月可用</option>
+					<option value="6">公众号福利</option>
+					<option value="7">回血活动返利</option>
 	          </select>
 	        </div>
 	      </div>

@@ -12,14 +12,17 @@ public class Dictionary {
 		activityMap.put("2","月底不助攻");
 		activityMap.put("3","幸运星");
 		activityMap.put("4","新人福利");
-		activityMap.put("5","邀请福利");
+		activityMap.put("5","邀请福利"); 
+		activityMap.put("6","公众号福利"); 
+		activityMap.put("7","回血活动返利"); 
 		
 	    activityMap.put("月底助攻","1");
 	    activityMap.put("月底不助攻","2");
 	    activityMap.put("幸运星","3");
 	    activityMap.put("新人福利","4");
 	    activityMap.put("邀请福利","5");
-
+		activityMap.put("公众号福利","6"); 
+		activityMap.put("回血活动返利","7");
 		
 		tranferMap.put("1", "阿联");
 		tranferMap.put("2", "微信");
