@@ -69,11 +69,18 @@ public class IndexController {
     public String weuiRule(HttpServletRequest request) {
         return "/weui-rule";
     }
-
+    
     @RequestMapping(value = { "/weuiLogout" })
     public String weuiLogout(HttpSession session) {
         session.removeAttribute(WebSecurityConfig.SESSION_KEY);
-        return "redirect:/weui-login";
+        return "redirect:./weui-login";
+    }
+    
+    
+
+    @RequestMapping(value = { "/weuiBlackList" })
+    public String weuiBlackList(HttpServletRequest request) {
+    	 return "/weui-blacklist";
     }
     
     

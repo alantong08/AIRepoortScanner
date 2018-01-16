@@ -69,7 +69,7 @@
           MCC码查询
         </p>
       </a>
-      <a href="blackList" class="weui-grid js_grid">
+      <a href="weuiBlackList" class="weui-grid js_grid">
         <div class="weui-grid__icon">
           <img src="images/icon_nav_actionSheet.png" alt="">
         </div>
