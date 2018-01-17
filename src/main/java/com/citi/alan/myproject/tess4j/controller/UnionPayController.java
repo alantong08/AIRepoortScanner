@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.citi.alan.myproject.tess4j.model.BillOrderDetail;
-import com.citi.alan.myproject.tess4j.service.api.BillOrderDetectorService;
 import com.citi.alan.myproject.tess4j.service.api.UnionPayOrderService;
 import com.citi.alan.myproject.tess4j.util.DateUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;

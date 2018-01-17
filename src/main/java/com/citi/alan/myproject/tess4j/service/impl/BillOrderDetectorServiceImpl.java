@@ -31,6 +31,7 @@ import com.citi.alan.myproject.tess4j.entity.OrderDetail;
 import com.citi.alan.myproject.tess4j.entity.UserInfo;
 import com.citi.alan.myproject.tess4j.enu.ActivityType;
 import com.citi.alan.myproject.tess4j.enu.GroupType;
+import com.citi.alan.myproject.tess4j.enu.ImageType;
 import com.citi.alan.myproject.tess4j.enu.TransferType;
 import com.citi.alan.myproject.tess4j.model.BillOrderDetail;
 import com.citi.alan.myproject.tess4j.service.api.BillOrderDetectorService;
@@ -237,7 +238,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
     public BillOrderDetail detetctBillOrderDetail(File file, String activityType, UserInfo user) {
         BillOrderDetail billOrderDetail = new BillOrderDetail();
         try {
-            String newFile = imageUtil.processImageThreshold(file.getAbsolutePath());
+            String newFile = imageUtil.processImageThreshold(file.getAbsolutePath(),ImageType.BILLORDER_SCREENSHOT);
             String result = tessercatUtil.parseImage(new File(newFile));
 
             if (result.contains(alipayIdentifier)) {
