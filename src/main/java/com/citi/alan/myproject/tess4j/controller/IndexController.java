@@ -32,10 +32,10 @@ public class IndexController {
         return "/tabbar";
     }
 
-    @RequestMapping(value = { "/weuiLogin" })
-    public String weuiLogin() {
-        return "/weui-login";
-    }
+//    @RequestMapping(value = { "/weuiLogin" })
+//    public String weuiLogin() {
+//        return "weui-login";
+//    }
 
     @RequestMapping(value = { "/weuiRegister" })
     public String weuiRegister() {
