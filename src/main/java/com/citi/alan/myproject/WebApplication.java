@@ -18,7 +18,7 @@ public class WebApplication extends SpringBootServletInitializer{
     static {
         nu.pattern.OpenCV.loadShared();
         System.loadLibrary(org.opencv.core.Core.NATIVE_LIBRARY_NAME);
-        //System.load("/home/apps/dll/liblept.so.4") ;
+        System.load("/home/apps/dll/liblept.so.4") ;
 
       }
     

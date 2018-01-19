@@ -73,10 +73,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
 
     private DecimalFormat decimalFormat = new DecimalFormat(".00");
 
-    @PostConstruct
-    public void loadMerchantMap() {
-        map = merchantService.getMerchantMap();
-    }
+
 
     public Map<String, Object> getBillOrderDetailList(String userName, String scanDate, Pageable pagRequest) {
         Map<String, Object> result = new HashMap<>();

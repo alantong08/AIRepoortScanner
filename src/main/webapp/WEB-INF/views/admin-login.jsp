@@ -57,11 +57,11 @@
 				<div style="margin-bottom: 10px">
 					<input id="mobile" name="mobile" class="easyui-numberbox"
 						data-options="prompt:'请输入手机号',iconCls:'icon-man'"
-						data-options="required:true" style="width: 50%; height: 38px" value="18918297673">
+						data-options="required:true" style="width: 50%; height: 38px" >
 				</div>
 				<div>
 					<input id="password" name="password" class="easyui-passwordbox"
-						data-options="prompt:'请输入密码'" style="width: 50%; height: 38px" value="222222">
+						data-options="prompt:'请输入密码'" style="width: 50%; height: 38px" >
 				</div>
 				<div style="text-align: center; margin-top: 10px">
 					<span id="message"></span>

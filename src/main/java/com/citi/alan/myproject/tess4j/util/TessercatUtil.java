@@ -29,7 +29,7 @@ public class TessercatUtil {
         instance.setDatapath(datapath);
     }
    
-    public String parseImage(File imageFile) throws IOException, TesseractException {
+    public synchronized String parseImage(File imageFile) throws IOException, TesseractException {
         long lStartTime = System.currentTimeMillis();
         logger.info("--------------------bill detail-------------");
         String result = instance.doOCR(imageFile);

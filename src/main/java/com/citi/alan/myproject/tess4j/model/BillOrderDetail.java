@@ -5,11 +5,13 @@ import java.io.Serializable;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
-import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 
 public class BillOrderDetail implements Serializable{
 
     private static final long serialVersionUID = 1L;
+    
+    @Excel(name= "序号", width=5, isImportField="trus_st")
+    private Integer id;
     @Excel(name= "扫描日期", width=20, isImportField="trus_st")
     private String scanDate;
     @Excel(name= "姓名", width=20, isImportField="trus_st")
@@ -20,24 +22,24 @@ public class BillOrderDetail implements Serializable{
     private String orderNum;
     @Excel(name= "商户名", width=20, isImportField="trus_st")
     private String merchantName;
-    @Excel(name= "月底助攻", width=30, replace={"月底助攻_1", "月底不助攻_2" }, isImportField="trus_st")
+    @Excel(name= "扫码金额", width=20, isImportField="trus_st")
+    private String actualPrice;
+    @Excel(name= "交易方式", width=20, replace={"阿联_1", "阿信_2" , "阿宝_3" }, isImportField="trus_st")
+    private String transferType;
+    @Excel(name= "所在群", width=20, isImportField="trus_st")
+    private String groupName;
+    @Excel(name= "活动", width=30, replace={"月底助攻_1", "月底不助攻_2","幸运星_3","新人福利_4", "邀请福利_5","回血活动_7"}, isImportField="trus_st")
     private String activityType;
     @Excel(name= "费率", width=20, isImportField="trus_st")
     private String rate; 
-    @Excel(name= "扫码额度", width=20, isImportField="trus_st")
-    private String actualPrice;
-    private String discountedPrice;
-    private String totalPrice;
-    @Excel(name= "月底助攻", width=30, replace={"阿联_1", "阿信_2" , "阿宝_3" }, isImportField="trus_st")
-    private String transferType;
-    @Excel(name= "备注", width=20, isImportField="trus_st")
-    private String comment;
     @Excel(name= "支付宝", width=20, isImportField="trus_st")
     private String alipayAccount;
+    @Excel(name= "备注", width=20, isImportField="trus_st")
+    private String comment;
+    private String discountedPrice;
+    private String totalPrice;
     private String mobile;
     private String createdDate;
-    private Integer id;
-    private String groupName;
     private String imageName;
     
     

@@ -31,17 +31,12 @@ public class AdminController {
     private BillOrderDetectorService billOrderDetectorService;
 
 
-    @Autowired
-    private UserInfoService userInfoService;
-     
-
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public UserLoginDetail login(@RequestParam("mobile") String mobile,@RequestParam("password") String password, HttpSession session) {
         String viewName = "";
-        UserLoginDetail userLoginDetail = null;  
-        try { 
-            userLoginDetail = userInfoService.login(mobile, password);
-            if (userLoginDetail.getMobile() != null) {     
+        UserLoginDetail userLoginDetail = new UserLoginDetail();  
+        try {
+            if ("18918297673".equals(mobile) && "admin".equals(password)) {     
                 userLoginDetail.setMessage("success");
                 viewName = "admin/home";
                 session.setAttribute(WebSecurityConfig.SESSION_KEY, mobile);
