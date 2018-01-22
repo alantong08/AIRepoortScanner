@@ -1,7 +1,6 @@
 package com.citi.alan.myproject.tess4j.service.impl;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -9,7 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.citi.alan.myproject.tess4j.dao.OrderDetailDao;
@@ -40,8 +44,6 @@ import com.citi.alan.myproject.tess4j.util.DateUtil;
 import com.citi.alan.myproject.tess4j.util.ImageUtil;
 import com.citi.alan.myproject.tess4j.util.TessercatUtil;
 
-import net.sourceforge.tess4j.TesseractException;
-
 @Service
 public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
 
@@ -53,9 +55,6 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
 
     @Autowired
     private ImageUtil imageUtil;
-
-    @Autowired
-    private MerchantService merchantService;
 
     @Autowired
     private OrderDetailDao orderDetailDao;
@@ -75,72 +74,57 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
 
 
 
-    public Map<String, Object> getBillOrderDetailList(String userName, String scanDate, Pageable pagRequest) {
+    public Map<String, Object> getBillOrderDetailList(String id, String userName, String reportDateFrom, String reportDateTo, Pageable pagRequest) {
         Map<String, Object> result = new HashMap<>();
-        if (!StringUtils.isAllEmpty(userName) && !StringUtils.isAllEmpty(scanDate) ) {
-            return getOrdersByUserNameAndScanDate(userName, scanDate, pagRequest);
-        }
+        try{
+			if (!StringUtils.isEmpty(id)) {
+				OrderDetail orderDetail = orderDetailDao.findOne(Integer.valueOf(id));
+				if(orderDetail!=null){
+					List<OrderDetail> orderDetails = new ArrayList<>();
+					orderDetails.add(orderDetail);
+					List<BillOrderDetail> billOrderDetails = populateBillOrderDetails(orderDetails);
+					result.put("rows", billOrderDetails);
+					result.put("page", 1);
+					result.put("total", 1);
+					return result;
+				}else{
+					result.put("rows", null);
+					result.put("page", 1);
+					result.put("total", 0);
+					return result;
+				}
 
-        if (StringUtils.isAllEmpty(userName) && !StringUtils.isAllEmpty(scanDate)) {
-            return getOrdersByScanDate(scanDate, pagRequest);
-        }
-
-        if (!StringUtils.isAllEmpty(userName) && StringUtils.isAllEmpty(scanDate)) {
-            return getOrdersByUserName(userName, pagRequest);
-        }
-
-        if (StringUtils.isAllEmpty(userName) && StringUtils.isAllEmpty(scanDate)) {
-            return getAllBillOrderDetailList(pagRequest);
-        }
-         
-        return result;
-
-    }
-
-    private Map<String, Object> getOrdersByUserName(String userName, Pageable pagRequest) {
-        Map<String, Object> result = new HashMap<>();
-        try {
-            Page<OrderDetail> page = orderDetailDao.findByUserInfoUserNameOrderByCreatedDateDesc(userName, pagRequest);
+			}
+            
+            Page<OrderDetail> page = orderDetailDao.findAll(new Specification<OrderDetail>() {
+    			@Override
+    			public Predicate toPredicate(Root<OrderDetail> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+    				Path<String> userNamePath = root.get("userInfo").get("userName");
+    				Path<String> createdDatePath = root.get("createdDate");
+    				List<Predicate> list = new ArrayList<>();
+    				if(!StringUtils.isEmpty(userName)){
+    					list.add(cb.like(userNamePath, "%"+userName+"%"));  
+    				}
+    				if(!StringUtils.isEmpty(reportDateFrom)){
+    					list.add(cb.greaterThan(createdDatePath, reportDateFrom+" 00:00:00"));
+    				}
+    				if(!StringUtils.isEmpty(reportDateTo)){
+    					list.add(cb.lessThan(createdDatePath, reportDateTo+" 23:59:59"));
+    				}
+    				Predicate [] p = new Predicate[list.size()];
+    				return cb.and(list.toArray(p));
+    			}
+    		}, pagRequest);
+            
             result = createResultMap(page);
-        } catch (Exception se) {
-            logger.error(se);
-        }
-        return result;
-    }
-
-    private Map<String, Object> getOrdersByUserNameAndScanDate(String userName, String scanDate, Pageable pagRequest) {
-        Map<String, Object> result = new HashMap<>();
-        try {
-            Page<OrderDetail> page = orderDetailDao.findByScanDateAndUserInfoUserNameOrderByCreatedDateDesc(scanDate, userName, pagRequest);
-            result = createResultMap(page);
-        } catch (Exception se) {
+        }catch(Exception se){
         		logger.error(se);
         }
+        
         return result;
+
     }
 
-    private Map<String, Object> getOrdersByScanDate(String scanDate, Pageable pagRequest) {
-        Map<String, Object> result = new HashMap<>();
-        try {
-            Page<OrderDetail> page = orderDetailDao.findByScanDateOrderByCreatedDateDesc(scanDate, pagRequest);
-            result = createResultMap(page);
-        } catch (Exception se) {
-        		logger.error(se);
-        }
-        return result;
-    }
-    
-    private Map<String, Object> getAllBillOrderDetailList(Pageable pagRequest) {
-        Map<String, Object> result = new HashMap<>();
-        try {
-            Page<OrderDetail> page = orderDetailDao.findAll(pagRequest);
-            result = createResultMap(page);
-
-        } catch (Exception se) {
-            logger.error(se);
-        }
-        return result;
-    }
 
     public List<BillOrderDetail> getBillOrderDetailList(String mobile) {
         List<BillOrderDetail> billOrderDetails = new ArrayList<>();
@@ -155,10 +139,10 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
         return billOrderDetails;
     }
     
-    public List<BillOrderDetail> getExportingBillOrderDetailList(String scanDate){
+    public List<BillOrderDetail> getExportingBillOrderDetailList(String reportDateFrom, String reportDateTo){
         List<BillOrderDetail> billOrderDetails = new ArrayList<>();
         try {
-            List<OrderDetail> orderDetails = orderDetailDao.findByScanDateOrderByCreatedDateDesc(scanDate);
+            List<OrderDetail> orderDetails = orderDetailDao.getReportByFilter(reportDateFrom, reportDateTo);
             billOrderDetails = populateBillOrderDetails(orderDetails);
         } catch (Exception se) {
                 logger.error(se);
@@ -249,7 +233,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
                 billOrderDetail = processWeixinOrder(result, activityType);
             }
 
-        } catch (IOException | TesseractException e) {
+        } catch (Exception e) {
             logger.error(e);
         }
 

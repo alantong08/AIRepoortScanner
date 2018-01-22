@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,9 +55,11 @@ public class AdminController {
     
     @RequestMapping(value = "/getOrderList")
     public Map<String, Object> getOrderList(HttpServletRequest request ) {
-        String scanDate=request.getParameter("scanDate");
+        String scanDateFrom=request.getParameter("scanDateFrom");
+        String scanDateTo=request.getParameter("scanDateTo");
         String name=request.getParameter("name");
-        logger.info("scanDate:"+scanDate+" name:"+name);
+        String id=request.getParameter("id");
+        logger.info("id:"+id+"\t from Date:"+scanDateFrom+" \t to Date:"+scanDateTo+"\t name:"+name);
         
         int pageNo=1;
         if(request.getParameter("page")!=null){
@@ -70,8 +73,8 @@ public class AdminController {
         
          Map<String, Object> map = new HashMap<>();
         try { 
-            Pageable pagRequest = new PageRequest(pageNo-1, pageSize, new Sort(Sort.Direction.DESC,"createdDate"));
-            map = billOrderDetectorService.getBillOrderDetailList(name, scanDate, pagRequest);
+            Pageable pagRequest = new PageRequest(pageNo-1, pageSize, new Sort(Direction.DESC, "createdDate"));
+            map = billOrderDetectorService.getBillOrderDetailList(id, name, scanDateFrom, scanDateTo,pagRequest);
 
         } catch (Exception e) {
             logger.error(e);

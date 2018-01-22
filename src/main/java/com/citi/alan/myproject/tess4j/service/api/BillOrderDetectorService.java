@@ -17,9 +17,9 @@ public interface BillOrderDetectorService {
     
     public List<BillOrderDetail> getBillOrderDetailList(String mobile);
     
-    public Map<String, Object> getBillOrderDetailList(String userName, String scanDate, Pageable pagRequest);
+    public Map<String, Object> getBillOrderDetailList(String id, String userName, String reportDateFrom, String reportDateTo, Pageable pagRequest);
     
-    public List<BillOrderDetail> getExportingBillOrderDetailList(String scanDate);
+    public List<BillOrderDetail> getExportingBillOrderDetailList(String reportDateFrom, String reportDateTo);
 
     public boolean updateOrderDetail(BillOrderDetail billOrderDetail) ;
     

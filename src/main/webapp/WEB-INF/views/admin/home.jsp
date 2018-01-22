@@ -31,7 +31,7 @@
             rownumbers="true" fitColumns="true">
         <thead>
             <tr>
-                <th field="id" hidden="true">ID</th>
+                <th field="id" width="10">序号</th>
                 <th field="userName" width="30" editor="{type:'validatebox',options:{required:true}}">姓名</th>
                 <th field="nickName" width="50" editor="{type:'validatebox',options:{required:true}}">群昵称</th>
                  <th field="groupName" width="50" editor="{type:'validatebox',options:{required:true}}">所在群</th>
@@ -52,38 +52,55 @@
     <div id="toolbar">
     <form id="ff" method="post" action="admin/download" >
 		<div>
+			<span>序号:</span>
+			<input id="id" name="id" class="easyui-textbox" /> 
 			<span>姓名:</span>
 			<input id="name2" name="name2" class="easyui-textbox" /> 
-			<span>扫码日期:</span> 
-			<input id="scanDate" name="scanDate" class="easyui-datebox" /> 
+			<span>报单开始日期:</span> 
+			<input id="scanDateFrom" name="scanDateFrom" class="easyui-datebox" /> 
+			<span>报单结束日期:</span> 
+			<input id="scanDateTo" name="scanDateTo" class="easyui-datebox" />
 			<a class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="doSearch()">查询</a>
 			<a class="easyui-linkbutton" iconCls="icon-export-to-excel" plain="true" onclick="doExport()">导出</a>
 		</div>
 	</form>
     </div>
 <script type="text/javascript">
+
+	function myformatter(date){
+      var y = date.getFullYear();
+      var m = date.getMonth()+1;
+      var d = date.getDate();
+      return y+'/'+ (m < 10 ? '0' + m : m)+'/'+ (d < 10 ? '0' + d : d);
+  	}
+	
+	function formatterFirstDay(date){
+	      var y = date.getFullYear();
+	      var m = date.getMonth()+1;
+	      return y+'/'+ (m < 10 ? '0' + m : m)+'/01';
+	  	}
+	
+	function myparser(s){
+          if (!s) return new Date();
+          var ss = s.split('/');
+          var y = parseInt(ss[0],10);
+          var m = parseInt(ss[1],10);
+          var d = parseInt(ss[2],10);
+          if (!isNaN(y) && !isNaN(m) && !isNaN(d)){
+              return new Date(y,m-1,d)
+          } else {
+              return new Date();
+          }
+      }
+
   	$(function() {
   		$('.easyui-datebox').datebox({
-  	        formatter : function(date){
-  	            var y = date.getFullYear();
-  	            var m = date.getMonth()+1;
-  	            var d = date.getDate();
-  	            return y+'-'+ (m < 10 ? '0' + m : m)+'-'+ (d < 10 ? '0' + d : d);
-  	        },
-  	        parser : function(s){
-  	            if (!s) return new Date();
-  	            var ss = s.split('-');
-  	            var y = parseInt(ss[0],10);
-  	            var m = parseInt(ss[1],10);
-  	            var d = parseInt(ss[2],10);
-  	            if (!isNaN(y) && !isNaN(m) && !isNaN(d)){
-  	                return new Date(y,m-1,d)
-  	            } else {
-  	                return new Date();
-  	            }
-  	        }
-
+  	        formatter : myformatter,
+  	        parser : myparser
   	    });
+  		
+  		$('#scanDateTo').datebox('setValue', myformatter(new Date()));
+  		$('#scanDateFrom').datebox('setValue', formatterFirstDay(new Date()));
 
   		$("#orderEDataGridAutoSave").initEdatagrid({
   			url : "admin/getOrderList",
@@ -111,7 +128,9 @@
 	 function doSearch() {
 			$("#orderEDataGridAutoSave").edatagrid("load", {
 				name : $("#name2").val(),
-				scanDate : $("#scanDate").combobox("getValue")
+				id: $("#id").val(),
+				scanDateFrom: $("#scanDateFrom").datebox("getValue"),
+				scanDateTo: $("#scanDateTo").datebox("getValue")
 			});
 	 }
 	 
@@ -121,10 +140,16 @@
 	 }
 	 
 	 function doExport(){
-	   var scanDate= $("#scanDate").combobox("getValue");
-		if(!scanDate){
-			alert("请选择需要导出数据的日期");
- 			$("#scanDate").focus();
+	   var scanDateFrom= $("#scanDateFrom").datebox("getValue");
+		if(!scanDateFrom){
+			alert("请选择需要导出数据的开始日期");
+ 			$("#scanDateFrom").focus();
+ 			return;
+ 		}
+		 var scanDateTo= $("#scanDateTo").datebox("getValue");
+		if(!scanDateTo){
+			alert("请选择需要导出数据的结束日期");
+ 			$("#scanDateTo").focus();
  			return;
  		}
 		

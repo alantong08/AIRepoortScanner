@@ -58,6 +58,10 @@
       </div>
       <div class="weui-form-preview__bd">
         <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">序号</label>
+          <span class="weui-form-preview__value">${item.id}</span>
+        </div>
+        <div class="weui-form-preview__item">
           <label class="weui-form-preview__label">扫码日期</label>
           <span class="weui-form-preview__value">${item.scanDate}</span>
         </div>

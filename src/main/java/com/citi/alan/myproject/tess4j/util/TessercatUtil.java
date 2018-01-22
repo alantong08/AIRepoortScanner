@@ -29,14 +29,20 @@ public class TessercatUtil {
         instance.setDatapath(datapath);
     }
    
-    public synchronized String parseImage(File imageFile) throws IOException, TesseractException {
-        long lStartTime = System.currentTimeMillis();
-        logger.info("--------------------bill detail-------------");
-        String result = instance.doOCR(imageFile);
-        logger.info(result);
-        long lEndTime = System.currentTimeMillis();
-        long output = (lEndTime - lStartTime)/1000;
-        logger.info("parseImage Elapsed time in seconds: " + output);
-        return result;
-    }
+	public synchronized String parseImage(File imageFile) {
+		long lStartTime = System.currentTimeMillis();
+		logger.info("--------------------bill detail-------------");
+		String result = null;
+		try {
+			result = instance.doOCR(imageFile);
+			logger.info(result);
+		} catch (Exception e) {
+			logger.error(e);
+		}
+
+		long lEndTime = System.currentTimeMillis();
+		long output = (lEndTime - lStartTime) / 1000;
+		logger.info("parseImage Elapsed time in seconds: " + output);
+		return result;
+	}
 }
