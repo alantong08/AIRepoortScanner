@@ -21,7 +21,6 @@ import com.citi.alan.myproject.tess4j.config.WebSecurityConfig;
 import com.citi.alan.myproject.tess4j.model.BillOrderDetail;
 import com.citi.alan.myproject.tess4j.model.UserLoginDetail;
 import com.citi.alan.myproject.tess4j.service.api.BillOrderDetectorService;
-import com.citi.alan.myproject.tess4j.service.api.UserInfoService;
 @RequestMapping("/admin")
 @RestController
 public class AdminController {
@@ -83,11 +82,24 @@ public class AdminController {
     }
     
     @RequestMapping(value = "/saveOrder")
-    public String saveOrderList(BillOrderDetail billOrderDetail) { 
+    public String saveOrder(BillOrderDetail billOrderDetail) { 
         try { 
             Boolean flag = billOrderDetectorService.updateOrderDetail(billOrderDetail);
             logger.info(flag);
 
+        } catch (Exception e) {
+            logger.error(e);
+        }
+        return "success";
+    }
+    
+    @RequestMapping(value = "/deleteOrder")
+    public String deleteOrder(HttpServletRequest request) {
+        String id=request.getParameter("id");
+        logger.info("****start to delete order************id :"+ id);
+        try { 
+            billOrderDetectorService.removeOrderDetail(Integer.valueOf(id));
+            
         } catch (Exception e) {
             logger.error(e);
         }

@@ -26,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.citi.alan.myproject.tess4j.dao.OrderDetailDao;
 import com.citi.alan.myproject.tess4j.dao.UserInfoDao;
@@ -182,6 +183,7 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
         return result;
     }
     
+    @Transactional
     public boolean updateOrderDetail(BillOrderDetail billOrderDetail) {
         boolean flag = false;
         try {
@@ -195,6 +197,11 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
         		logger.error(e);
         } 
         return flag;
+    }
+    
+    public void removeOrderDetail(Integer id){
+        orderDetailDao.delete(id);
+        
     }
 
     public boolean saveOrderDetail(BillOrderDetail billOrderDetail) {

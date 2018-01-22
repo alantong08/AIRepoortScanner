@@ -63,6 +63,8 @@
 			<a class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="doSearch()">查询</a>
 			<a class="easyui-linkbutton" iconCls="icon-export-to-excel" plain="true" onclick="doExport()">导出</a>
 		</div>
+		<a class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="deleteSelectedRow()">删除</a> 
+		<a class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="javascript:$('#orderEDataGridAutoSave').edatagrid('cancelRow')">取消</a>
 	</form>
     </div>
 <script type="text/javascript">
@@ -105,8 +107,20 @@
   		$("#orderEDataGridAutoSave").initEdatagrid({
   			url : "admin/getOrderList",
   			updateUrl : "admin/saveOrder",
+  			destroyUrl : "admin/deleteOrder",
+  			idField : "id",
   			autoSave : true, //auto save the editing row when click out of datagrid!
   			iconCls:'icon-group',
+			destroyMsg : {
+				norecord : { // when no record is selected
+					title : 'Warning',
+					msg : '请选择要删除的行.'
+				},
+				confirm : { // when select a row
+					title : 'Confirm',
+					msg : '确定要删除该行数据吗?'
+				}
+			},
   			onLoadSuccess:function(){
   			//	$(this).datagrid("enableDnd");
   			},
@@ -115,7 +129,7 @@
   			checkOnSelect : true,
   			singleSelect : true,
   			clickEdit : false, //单击编辑
-  			showMsg : false, // 显示操作消息
+  			showMsg : true, // 显示操作消息
   			/*
   			 * 分页控制
   			 */
@@ -132,6 +146,19 @@
 				scanDateFrom: $("#scanDateFrom").datebox("getValue"),
 				scanDateTo: $("#scanDateTo").datebox("getValue")
 			});
+	 }
+	 
+	 function deleteSelectedRow() {
+		
+		 var row = $('#orderEDataGridAutoSave').datagrid('getSelected');
+			$.ajax({
+			      url: 'admin/deleteOrder',
+			      type: 'POST',
+			      data : {id : row.id},
+			      success: function(response){
+			    	  $('#orderEDataGridAutoSave').datagrid('reload');
+			    	}
+			    });
 	 }
 	 
 	 function imgFormatter(value,row,index){	 

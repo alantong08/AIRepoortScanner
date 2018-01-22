@@ -23,6 +23,8 @@ public interface BillOrderDetectorService {
 
     public boolean updateOrderDetail(BillOrderDetail billOrderDetail) ;
     
+    public void removeOrderDetail(Integer id) ;
+    
     
    
 }
