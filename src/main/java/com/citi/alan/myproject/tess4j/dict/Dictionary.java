@@ -15,6 +15,7 @@ public class Dictionary {
 		activityMap.put("5","邀请福利"); 
 		activityMap.put("6","公众号福利"); 
 		activityMap.put("7","回血活动返利"); 
+		activityMap.put("8","微信周末摇摇乐"); 
 		
 	    activityMap.put("月底助攻","1");
 	    activityMap.put("月底不助攻","2");
@@ -23,6 +24,7 @@ public class Dictionary {
 	    activityMap.put("邀请福利","5");
 		activityMap.put("公众号福利","6"); 
 		activityMap.put("回血活动返利","7");
+		activityMap.put("微信周末摇摇乐","8"); 
 		
 		tranferMap.put("1", "阿联");
 		tranferMap.put("2", "微信");

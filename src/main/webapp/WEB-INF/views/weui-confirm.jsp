@@ -93,6 +93,7 @@
 					<option value="5">邀请福利下月可用</option>
 					<option value="6">公众号福利</option>
 					<option value="7">回血活动返利</option>
+					<option value="8">微信周末摇摇乐</option>
 	          </select>
 	          </div>
 		  </div>

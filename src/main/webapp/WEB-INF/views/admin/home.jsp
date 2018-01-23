@@ -31,7 +31,7 @@
             rownumbers="true" fitColumns="true">
         <thead>
             <tr>
-                <th field="id" width="10">序号</th>
+                <th field="id">序号</th>
                 <th field="userName" width="30" editor="{type:'validatebox',options:{required:true}}">姓名</th>
                 <th field="nickName" width="50" editor="{type:'validatebox',options:{required:true}}">群昵称</th>
                  <th field="groupName" width="50" editor="{type:'validatebox',options:{required:true}}">所在群</th>
@@ -60,11 +60,13 @@
 			<input id="scanDateFrom" name="scanDateFrom" class="easyui-datebox" /> 
 			<span>报单结束日期:</span> 
 			<input id="scanDateTo" name="scanDateTo" class="easyui-datebox" />
-			<a class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="doSearch()">查询</a>
-			<a class="easyui-linkbutton" iconCls="icon-export-to-excel" plain="true" onclick="doExport()">导出</a>
 		</div>
+		<div>
+		<a class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="doSearch()">查询</a>
 		<a class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="deleteSelectedRow()">删除</a> 
-		<a class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="javascript:$('#orderEDataGridAutoSave').edatagrid('cancelRow')">取消</a>
+		<a class="easyui-linkbutton" iconCls="icon-export-to-excel" plain="true" onclick="doExport()">导出</a>
+		</div>
+
 	</form>
     </div>
 <script type="text/javascript">
@@ -107,20 +109,8 @@
   		$("#orderEDataGridAutoSave").initEdatagrid({
   			url : "admin/getOrderList",
   			updateUrl : "admin/saveOrder",
-  			destroyUrl : "admin/deleteOrder",
-  			idField : "id",
   			autoSave : true, //auto save the editing row when click out of datagrid!
   			iconCls:'icon-group',
-			destroyMsg : {
-				norecord : { // when no record is selected
-					title : 'Warning',
-					msg : '请选择要删除的行.'
-				},
-				confirm : { // when select a row
-					title : 'Confirm',
-					msg : '确定要删除该行数据吗?'
-				}
-			},
   			onLoadSuccess:function(){
   			//	$(this).datagrid("enableDnd");
   			},
@@ -129,7 +119,7 @@
   			checkOnSelect : true,
   			singleSelect : true,
   			clickEdit : false, //单击编辑
-  			showMsg : true, // 显示操作消息
+  			showMsg : false, // 显示操作消息
   			/*
   			 * 分页控制
   			 */
@@ -149,16 +139,24 @@
 	 }
 	 
 	 function deleteSelectedRow() {
-		
 		 var row = $('#orderEDataGridAutoSave').datagrid('getSelected');
-			$.ajax({
-			      url: 'admin/deleteOrder',
-			      type: 'POST',
-			      data : {id : row.id},
-			      success: function(response){
-			    	  $('#orderEDataGridAutoSave').datagrid('reload');
-			    	}
-			    });
+		 if(row){
+			 $.messager.confirm('确认','确认删除选中行吗?',function(r){
+				    if (r){	 
+						$.ajax({
+						      url: 'admin/deleteOrder',
+						      type: 'POST',
+						      data : {id : row.id},
+						      success: function(response){
+						    	  $('#orderEDataGridAutoSave').datagrid('reload');
+						    	}
+						});
+				    }
+				}); 
+		 }else{
+			 $.messager.alert('Warning','请选择需要删除的记录');
+		 }
+
 	 }
 	 
 	 function imgFormatter(value,row,index){	 

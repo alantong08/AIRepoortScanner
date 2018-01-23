@@ -62,14 +62,15 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
 
     @Autowired
     private UserInfoDao userInfoDao;
+    
+    @Autowired
+    MerchantService merchantService;
 
     @Value("${alipay.identifier}")
     private String alipayIdentifier;
 
     @Value("${elian.identifier}")
     private String elianIdentifier;
-
-    private Map<String, Merchant> map = new HashMap<>();
 
     private DecimalFormat decimalFormat = new DecimalFormat(".00");
 
@@ -212,12 +213,13 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             UserInfo userInfo = userInfoDao.findByMobile(billOrderDetail.getMobile());
             orderDetail.setUserInfo(userInfo);
             orderDetail.setCreatedDate(DateUtil.getFormatDateStr("yyyy/MM/dd HH:mm:ss"));
-            Merchant merchant = map.get(billOrderDetail.getMerchantName());
+            Merchant merchant = merchantService.getMerchantMap().get(billOrderDetail.getMerchantName());
             orderDetail.setMerchantName(merchant.getMerchantName());
             orderDetailDao.save(orderDetail);
             flag = true;
         } catch (Exception e) {
-        		logger.error(e);
+        		logger.error(e.toString());
+        		
         } 
         return flag;
     }
@@ -303,6 +305,8 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             rate = "0.15";
         }else if (ActivityType.WECHAT_FOLLOWING.getValue().equals(activityType)) {
             rate = "0.2";
+        }else if (ActivityType.WEIXIN_ZERO_RATE.getValue().equals(activityType)) {
+            rate = "0";
         }
         billOrderDetail.setRate(rate);
     }
