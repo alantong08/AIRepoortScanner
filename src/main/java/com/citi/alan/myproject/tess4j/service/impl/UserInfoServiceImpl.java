@@ -47,7 +47,7 @@ public class UserInfoServiceImpl implements UserInfoService{
             userLoginDetail.setRegistered(true);
         }else{
         		Role role = roleDao.findByRoleName("USER");
-        		HashSet<Role> roleSet = new HashSet<Role>();
+        		HashSet<Role> roleSet = new HashSet<>();
         		roleSet.add(role);
         		data.setRoles(roleSet);
             userInfoDao.save(data);
@@ -56,20 +56,22 @@ public class UserInfoServiceImpl implements UserInfoService{
     }
     
     public String updateUserInfo(UserInfo userInfo) {
-    		String result = "";
+        String result;
         UserInfo storedUserInfo = getUserByMobile(userInfo.getMobile());
-        if (storedUserInfo!=null) {
-        		storedUserInfo.setAlipayAccount(userInfo.getAlipayAccount());
-        		storedUserInfo.setNickName(userInfo.getNickName());
-        		storedUserInfo.setPassword(userInfo.getPassword());
-        		storedUserInfo.setGroupName(userInfo.getGroupName());
-        		userInfoDao.save(storedUserInfo);
-        		result = "success";
-        }else{
-        		result = "failed";
+        if (storedUserInfo != null) {
+            storedUserInfo.setAlipayAccount(userInfo.getAlipayAccount());
+            storedUserInfo.setNickName(userInfo.getNickName());
+            storedUserInfo.setPassword(userInfo.getPassword());
+            storedUserInfo.setGroupName(userInfo.getGroupName());
+            storedUserInfo.setBankCardNum(userInfo.getBankCardNum());
+            storedUserInfo.setBankName(userInfo.getBankName());
+            userInfoDao.save(storedUserInfo);
+            result = "success";
+        } else {
+            result = "failed";
         }
         return result;
-    		
+
     }
 
 }

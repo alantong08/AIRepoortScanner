@@ -82,6 +82,41 @@
 					<input class="weui-input" id="alipayAccount" name="alipayAccount" type="text" >
 				</div>
 			</div>
+			<div class="weui-cell">
+				<div class="weui-cell__hd">
+					<label class="weui-label">银行名称</label>
+				</div>
+			   <div class="weui-cell__bd">	          
+			          <select class="weui-select" id="bankName" name="bankName">
+							<option value="工商银行">工商银行</option>
+							<option value="建设银行">建设银行</option>
+							<option value="农业银行">农业银行</option>
+							<option value="中国银行">中国银行</option>
+							<option value="邮储银行">邮储银行</option>
+							<option value="中信银行">中信银行</option>
+							<option value="光大银行">光大银行</option>
+							<option value="华夏银行">华夏银行</option>
+							<option value="民生银行">民生银行</option>
+							<option value="招商银行">招商银行</option>
+							<option value="上海银行">上海银行</option>
+							<option value="北京银行">北京银行</option>
+							<option value="东亚银行">东亚银行</option>
+							<option value="兴业银行">兴业银行</option>
+							<option value="宁波银行">宁波银行</option>
+							<option value="浦发银行">浦发银行</option>
+							<option value="广发银行">广发银行</option>
+							<option value="平安银行">平安银行</option>
+			          </select>
+			    </div>
+		    </div>
+			<div class="weui-cell">
+				<div class="weui-cell__hd">
+					<label class="weui-label">借记卡号</label>
+				</div>
+				<div class="weui-cell__bd">
+					<input class="weui-input" id="bankCardNum" name="bankCardNum" type="number" >
+				</div>
+			</div>
 
 		</div>
 
@@ -110,6 +145,8 @@ $(document).ready(function() {
 		$("#nickName").val(userInfo.nickName);
 		$("#groupName").val(userInfo.groupName);
 		$("#alipayAccount").val(userInfo.alipayAccount);
+		$("#bankName").val(userInfo.bankName);
+		$("#bankCardNum").val(userInfo.bankCardNum);
 	}
 });
 

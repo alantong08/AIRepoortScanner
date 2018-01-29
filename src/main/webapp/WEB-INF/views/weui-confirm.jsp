@@ -165,6 +165,12 @@
  			$("#orderNum").focus();
  			return;
  		}
+ 		
+ 		if(orderNum.length<27){
+ 			$.toptip('订单号长度小于27位， 请核对！', 'error');
+ 			$("#orderNum").focus();
+ 			return;
+ 		}
  		var merchantName = $("#merchantName").val();
  		if(!merchantName){
  			$.toptip('商户名不能为空', 'error');

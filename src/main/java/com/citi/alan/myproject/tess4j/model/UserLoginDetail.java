@@ -11,6 +11,8 @@ public class UserLoginDetail {
     private String message;
     private String view;
     private String groupName;
+    private String bankName;
+    private String bankCardNum;
     
     
 
@@ -68,10 +70,17 @@ public class UserLoginDetail {
     public void setView(String view) {
         this.view = view;
     }
-    
-    
-    
-    
-    
-    
+    public String getBankName() {
+        return bankName;
+    }
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+    public String getBankCardNum() {
+        return bankCardNum;
+    }
+    public void setBankCardNum(String bankCardNum) {
+        this.bankCardNum = bankCardNum;
+    }
+   
 }

@@ -38,6 +38,10 @@ public class UserInfo {
     private Integer enabled=1;
     @Column(name = "groupName")
     private String groupName;
+    @Column(name = "bank_name")
+    private String bankName;
+    @Column(name = "bank_card_num")
+    private String bankCardNum;
     
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
     private Set<OrderDetail> orderDetails;
@@ -132,6 +136,24 @@ public class UserInfo {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
+    }
+    
+    
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public String getBankCardNum() {
+        return bankCardNum;
+    }
+
+    public void setBankCardNum(String bankCardNum) {
+        this.bankCardNum = bankCardNum;
     }
 
     @Override
