@@ -20,8 +20,8 @@
 
 <body ontouchstart>
 	<header class='demos-header'>
-		<p class="demos-title">我的个人信息</p>
-	</header>
+	<p class="demos-title">我的个人信息</p>
+	 </header>
 	<form id="updateForm">
 		<div class="weui-cells weui-cells_form">
 			<div class="weui-cell">
@@ -124,7 +124,21 @@
 			<a id="updateBtn" class="weui-btn weui-btn_primary">修改</a>
 		</div>
 	</form>
- <%@ include file="footer.jsp"%>
+	<br><br>
+     <div class="weui-tabbar">
+       <a href="tabbar" class="weui-tabbar__item weui-bar__item--on">
+         <div class="weui-tabbar__icon">
+           <img src="weui/demos/images/icon_nav_button.png" alt="">
+         </div>
+         <p class="weui-tabbar__label">主页</p>
+       </a>
+       <a href="loginRegister/weuiMyself" class="weui-tabbar__item">
+         <div class="weui-tabbar__icon">
+           <img src="weui/demos/images/icon_nav_cell.png" alt="">
+         </div>
+         <p class="weui-tabbar__label">我</p>
+       </a>
+     </div>
 
 <script src="lib/jquery-2.1.4.js"></script>
 <script src="lib/fastclick.js"></script>

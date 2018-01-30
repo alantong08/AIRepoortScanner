@@ -211,7 +211,8 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
         try {
             BeanUtils.copyProperties(orderDetail, billOrderDetail);
             UserInfo userInfo = userInfoDao.findByMobile(billOrderDetail.getMobile());
-            orderDetail.setActualPrice(decimalFormat.format(billOrderDetail.getActualPrice()));
+            Double actualPrice = Double.valueOf(billOrderDetail.getActualPrice());
+            orderDetail.setActualPrice(decimalFormat.format(actualPrice));
             orderDetail.setUserInfo(userInfo);
             orderDetail.setCreatedDate(DateUtil.getFormatDateStr("yyyy/MM/dd HH:mm:ss"));
             Merchant merchant = merchantService.getMerchantMap().get(billOrderDetail.getMerchantName());
