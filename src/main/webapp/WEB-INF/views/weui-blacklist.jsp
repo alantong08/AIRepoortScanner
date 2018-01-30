@@ -27,7 +27,7 @@
 		<div class="weui-cells weui-cells_form">
 			<div class="weui-cell">
 				<div class="weui-cell__hd">
-					<label class="weui-label">银联交易截图:</label>
+					<label class="weui-label">银联截图:</label>
 				</div>
 				<div id="filUploader" class="weui-uploader__input-box">
 					<input class="weui-uploader__input" id="file-order" name="file-order"  type="file"  placeholder="请上传文件">
@@ -36,7 +36,6 @@
              		<div class="weui-uploader__file-content">100%</div>
             		</div>
 			</div>
-
 		</div>
 
 		<div class="weui-btn-area">
