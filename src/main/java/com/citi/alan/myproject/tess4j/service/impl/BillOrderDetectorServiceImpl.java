@@ -423,6 +423,8 @@ public class BillOrderDetectorServiceImpl implements BillOrderDetectorService {
             String singleLineResult = list[i];
             if(singleLineResult.contains("交易 时间")){
     				singleLineResult = singleLineResult.replace("交易 时间", "交易时间");
+            }else  if(singleLineResult.contains("订单 编号")){
+    				singleLineResult = singleLineResult.replace("订单 编号", "订单编号");
             }
             String key = singleLineResult.substring(0, singleLineResult.indexOf(" ") + 1);
             String value = singleLineResult.substring(singleLineResult.indexOf(key) + key.length());
